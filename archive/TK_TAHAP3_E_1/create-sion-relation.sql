@@ -126,7 +126,7 @@ create table kegiatan (
 
 CREATE TABLE LAPORAN_KEUANGAN (
   organisasi        VARCHAR(50) NOT NULL,
-  tgl_dibuat        VARCHAR(50) NOT NULL,
+  tgl_dibuat        date NOT NULL,
   rincian_pemasukan TEXT        NOT NULL,
   total_pemasukan   INT         NOT NULL,
   total_pengeluaran INT         NOT NULL,
