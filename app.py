@@ -81,7 +81,7 @@ def logout():
 
 # users controller by Arga G. A.
 # this is template controller
-# retrive all users email
+# retrieve all users email
 @app.route('/users')
 def getUsersEmail():
     try:
