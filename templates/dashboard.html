@@ -51,6 +51,7 @@
                 <button type="button" class="btn btn-lg btn-block btn-primary">Lihat organisasi</button>
             </div>
         </div>
+        {% if session['relawan'] or session['donatur'] or session['sponsor'] %}
         <div class="card mb-4 box-shadow">
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal">Berdonasi ke Organisasi</h4>
@@ -60,8 +61,10 @@
                 <button type="button" class="btn btn-lg btn-block btn-primary">Berdonasi ke organisasi</button>
             </div>
         </div>
+        {% endif %}
     </div>
     <div class="card-deck mb-3 text-center">
+        {% if session['relawan'] or session['donatur'] %}
         <div class="card mb-4 box-shadow">
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal">Berdonasi ke Kegiatan</h4>
@@ -71,6 +74,8 @@
                 <button type="button" class="btn btn-lg btn-block btn-primary">Berdonasi ke kegiatan</button>
             </div>
         </div>
+        {% endif %}
+        {% if session['pengurus organisasi'] %}
         <div class="card mb-4 box-shadow">
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal">Buat Kegiatan</h4>
@@ -89,6 +94,7 @@
                 <button type="button" class="btn btn-lg btn-block btn-primary">Lihat kegiatan</button>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
