@@ -32,7 +32,7 @@ def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return render_template('dashboard.html', userName=session['name'])
+        return render_template('dashboard.html', userName=session['name'], userRole=session['role'])
 
 
 # login controller by Arga G. A.
@@ -53,19 +53,25 @@ def login():
 
         cur.execute("""select * from sion.pengguna where email = {}""".format("'" + requestEmail + "'"))
         userObj = cur.fetchone()
-        correctPassword = userObj[1]
-        requestName = userObj[2]
 
-        print(requestName + " " + requestEmail + " " + requestPassword + " " + correctPassword)
-        if requestPassword == correctPassword:
-            session['email'] = requestEmail
-            session['name'] = requestName
-            session['logged_in'] = True
-            print("Login success!")
+        if (userObj):
+            correctPassword = userObj[1]
+            requestName = userObj[2]
+
+            print(requestName + " " + requestEmail + " " + requestPassword + " " + correctPassword)
+            if requestPassword == correctPassword:
+                session['email'] = requestEmail
+                session['name'] = requestName
+                session['role'] = getUserRole(requestEmail)
+                session['logged_in'] = True
+                print("Login success!")
+            else:
+                print("Login failed, wrong password!")
+                flash('wrong password!')
+            return home()
         else:
-            print("Login failed!")
-            flash('wrong password!')
-        return home()
+            print("Pengguna tidak ada!")
+            flash("User doesnt exist!")
     except Exception as e:
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
@@ -75,6 +81,7 @@ def login():
 # mark user have logged out
 @app.route("/logout")
 def logout():
+    session.clear()
     session['logged_in'] = False
     return home()
 
@@ -92,6 +99,45 @@ def getUsersEmail():
             my_list.append(row[0])
 
         return render_template('users.html', results=my_list)
+    except Exception as e:
+        print("Ada kesalahan pada method getUsersEmail(), " + e)
+        return "Ada kesalahan pada fungsi getUsersEmail."
+
+
+def getUserRole(requestEmail):
+    try:
+        cur.execute(
+            """select * from sion.pengguna, sion.donatur where sion.pengguna.email = sion.donatur.email and sion.pengguna.email = {}""".format(
+                "'" + requestEmail + "'"))
+        isDonatur = cur.fetchall
+        cur.execute(
+            """select * from sion.pengguna, sion.relawan where sion.pengguna.email = sion.relawan.email and sion.pengguna.email = {}""".format(
+                "'" + requestEmail + "'"))
+        isRelawan = cur.fetchall
+        cur.execute(
+            """select * from sion.pengguna, sion.sponsor where pengguna.email = sion.sponsor.email and sion.pengguna.email = {}""".format(
+                "'" + requestEmail + "'"))
+        isSponsor = cur.fetchall
+        cur.execute(
+            """select * from sion.pengguna, sion.pengurus_organisasi where sion.pengguna.email = sion.pengurus_organisasi.email and pengguna.email = {}""".format(
+                "'" + requestEmail + "'"))
+        isPengurusOrganisasi = cur.fetchall
+
+        if isDonatur:
+            print("donatur")
+            return "donatur"
+        elif isRelawan:
+            print("relawan")
+            return "relawan"
+        elif isSponsor:
+            print("sponsor")
+            return "sponsor"
+        elif isPengurusOrganisasi:
+            print("pengurus organisasi")
+            return "pengurus organisasi"
+        else:
+            print("Error: tidak terdaftar pada role manapun")
+            return "none"
     except Exception as e:
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
