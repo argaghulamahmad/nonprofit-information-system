@@ -54,7 +54,7 @@ def login():
         cur.execute("""select * from sion.pengguna where email = {}""".format("'" + requestEmail + "'"))
         userObj = cur.fetchone()
 
-        if (userObj):
+        if userObj:
             correctPassword = userObj[1]
             requestName = userObj[2]
 
@@ -62,7 +62,9 @@ def login():
             if requestPassword == correctPassword:
                 session['email'] = requestEmail
                 session['name'] = requestName
-                session['role'] = getUserRole(requestEmail)
+                userRole = getUserRole(requestEmail)
+                session['role'] = userRole
+                session['{}'.format(userRole)] = True
                 session['logged_in'] = True
                 print("Login success!")
             else:
@@ -72,6 +74,7 @@ def login():
         else:
             print("Pengguna tidak ada!")
             flash("User doesnt exist!")
+            return loginPage()
     except Exception as e:
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
@@ -123,12 +126,12 @@ def getUserRole(requestEmail):
                 "'" + requestEmail + "'"))
         isPengurusOrganisasi = cur.fetchall
 
-        if isDonatur:
-            print("donatur")
-            return "donatur"
-        elif isRelawan:
+        if isRelawan:
             print("relawan")
             return "relawan"
+        elif isDonatur:
+            print("donatur")
+            return "donatur"
         elif isSponsor:
             print("sponsor")
             return "sponsor"
