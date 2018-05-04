@@ -32,7 +32,16 @@ def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
+        return dashboard()
+
+# dashboard controller by Arga G. A.
+# provide dashboard page
+@app.route('/dashboard')
+def dashboard():
+    if session.get('logged_in'):
         return render_template('dashboard.html', userName=session['name'], userRole=session['role'])
+    else:
+        return loginPage()
 
 
 # login controller by Arga G. A.
@@ -89,7 +98,7 @@ def logout():
     return home()
 
 
-# users controller by Arga G. A.
+# users emails controller by Arga G. A.
 # this is template controller
 # retrieve all users email
 @app.route('/users')
@@ -107,6 +116,9 @@ def getUsersEmail():
         return "Ada kesalahan pada fungsi getUsersEmail."
 
 
+# get user role controller by Arga G. A.
+# determine role of user by using email
+# retrieve user role
 def getUserRole(requestEmail):
     try:
         cur.execute(
@@ -144,6 +156,49 @@ def getUserRole(requestEmail):
     except Exception as e:
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
+
+
+# register page controller by Arga G. A.
+# provide register choices
+@app.route('/register')
+def registerPage():
+    return render_template('register.html')
+
+
+# register relawan page controller by Arga G. A.
+# provide register relawan page
+@app.route('/register-relawan')
+def registerRelawanPage():
+    return render_template('register-relawan.html')
+
+
+# register donatur page controller by Arga G. A.
+# provide register donatur page
+@app.route('/register-donatur')
+def registerDonaturPage():
+    return render_template('register-donatur.html')
+
+
+# register sponsor page controller by Arga G. A.
+# provide register sponsor page
+@app.route('/register-sponsor')
+def registerSponsorPage():
+    return render_template('register-sponsor.html')
+
+# todo
+# @app.route('/register-relawan', methods=['POST'])
+# def registerRelawan():
+#     return render_template('register-relawan.html')
+#
+#
+# @app.route('/register-donatur', methods=['POST'])
+# def registerDonatur():
+#     return render_template('register-donatur.html')
+#
+#
+# @app.route('/register-sponsor', methods=['POST'])
+# def registerSponsor():
+#     return render_template('register-sponsor.html')
 
 
 # main method to run the web server

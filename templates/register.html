@@ -1,0 +1,135 @@
+<!--Created by Arga G. A.-->
+<!--html template for register-->
+{% block body %}
+    {% if session['logged_in'] %}
+        <p>You're logged in already!</p>
+    {% else %}
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="description" content="">
+            <meta name="author" content="">
+            <!--<link rel="icon" href="../../../../favicon.ico">-->
+
+            <title>Register - SION</title>
+
+            <!-- Bootstrap core CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+                  integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+                  crossorigin="anonymous">
+
+            <!-- Custom styles for this template -->
+            <link href="/static/dashboard.css" rel="stylesheet">
+        </head>
+
+        <body>
+
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+            <h5 class="my-0 mr-md-auto font-weight-normal">SION</h5>
+        </div>
+
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">Selamat datang di halaman pendaftaran SION.</h1>
+            <p class="lead">Silahkan anda pilih role yang ada.</p>
+        </div>
+
+        <div class="container">
+            <div class="card-deck mb-3 text-center">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Relawan</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Relawan dapat mendaftar dengan mencatat nama, e-mail, password, alamat lengkap, tanggal
+                            lahir, nomor
+                            handphone, keahlian relawan yang bisa jadi lebih dari satu, dan harus mencantumkan nama
+                            organisasinya. Setiap relawan dapat bergabung di satu atau lebih organisasi.</p>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterRelawan()">
+                            Daftar
+                            sebagai Relawan
+                        </button>
+                    </div>
+                </div>
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Donatur</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Donatur yang terdaftar di dalam sistem dapat berdonasi ke setiap kegiatan yang diadakan oleh
+                            suatu
+                            organisasi dengan mencatat tanggal dan nominal donasi. Namun, para donatur juga dapat
+                            langsung
+                            berdonasi ke organisasi dengan memilih donasi rutin jika diinginkan.</p>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterDonatur()">
+                            Daftar
+                            sebagai Donatur
+                        </button>
+                    </div>
+                </div>
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Sponsor</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Sponsor tidak akan pernah menjadi relawan dan setiap sponsor hanya dapat berdonasi ke
+                            organisasi.
+                            Nominal dana yang didonasikan minimal Rp2.000.000 dan nama atau logo sponsor akan dimasukkan
+                            ke
+                            dalam halaman organisasi yang mendapatkan dana dari sponsor tersebut. Tanggal donasi juga
+                            dicatat di
+                            dalam sistem.</p>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterSponsor()">
+                            Daftar
+                            sebagai Sponsor
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <footer class="my-5 pt-5 text-muted text-center text-small">
+                <p class="mb-1">SION © 2018</p>
+            </footer>
+        </div>
+    {% endif %}
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script\n' +
+    '  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"\n' +
+    '  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="\n' +
+    '  crossorigin="anonymous"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.js"></script>
+<script>
+    Holder.addTheme('thumb', {
+        bg: '#55595c',
+        fg: '#eceeef',
+        text: 'Thumbnail'
+    });
+
+    function goToRegisterRelawan() {
+        location.href = "/register-relawan"
+    }
+
+    function goToRegisterDonatur() {
+        location.href = "/register-donatur"
+    }
+
+    function goToRegisterSponsor() {
+        location.href = "/register-sponsor"
+    }
+
+    function goToRegisterOrganisasi() {
+        location.href = "/register-organisasi"
+    }
+</script>
+</body>
+{% endblock %}
