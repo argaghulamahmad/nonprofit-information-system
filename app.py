@@ -13,7 +13,7 @@ from os import makedirs
 
 # connect to local database
 # change this variables according your local database
-dbname = 'argaghulam'  # database name
+dbname = 'bramsedana'  # database name
 username = 'postgres'  # username
 password = 'postgres'  # password
 
@@ -106,7 +106,6 @@ def getUsersEmail():
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
-
 def getUserRole(requestEmail):
     try:
         cur.execute(
@@ -145,6 +144,9 @@ def getUserRole(requestEmail):
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
+@app.route('/profile')
+def profile():
+    return render_template('profile-relawan.html')
 
 # main method to run the web server
 if __name__ == '__main__':
