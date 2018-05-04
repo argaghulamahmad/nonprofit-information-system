@@ -46,12 +46,6 @@ CREATE TRIGGER saldo_donatur_organisasi
   FOR EACH ROW
 EXECUTE PROCEDURE saldo_donatur();
 
-CREATE TRIGGER status_aktif_organisasi
-  AFTER UPDATE
-  ON LAPORAN_KEUANGAN
-  FOR EACH ROW
-EXECUTE PROCEDURE status_aktif_organisasi();
-
 CREATE OR REPLACE FUNCTION status_aktif_organisasi()
   RETURNS trigger AS
 $$
@@ -74,3 +68,9 @@ BEGIN
   END;
 $$
 LANGUAGE plpgsql;
+
+CREATE TRIGGER status_aktif_organisasi
+  AFTER UPDATE
+  ON LAPORAN_KEUANGAN
+  FOR EACH ROW
+EXECUTE PROCEDURE status_aktif_organisasi();

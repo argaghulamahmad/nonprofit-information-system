@@ -145,6 +145,39 @@ def getUserRole(requestEmail):
         print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
+# users controller by Aldi Hilman Ramadhani
+# this is template controller
+# retrieve all users email
+@app.route('/organization')
+def view_organization_list():
+
+    return render_template(
+        'organization_list.html',
+        userName=session['name'],
+        userRole=session['role']
+        # , results=my_list
+    )
+    # try:
+    #     cur.execute("""SELECT * from sion.pengguna""")
+    #     rows = cur.fetchall()
+    #     my_list = []
+    #     for row in rows:
+    #         my_list.append(row[0])
+
+    #     return render_template('users.html', results=my_list)
+    # except Exception as e:
+    #     print("Ada kesalahan pada method getUsersEmail(), " + e)
+    #     return "Ada kesalahan pada fungsi getUsersEmail."
+
+@app.route('/organization/<page_id>')
+def view_organization_profle(page_id):
+    pageid = page_id
+    return render_template(
+        'organization_profile.html',
+        results=my_list
+    )
+    # You might want to return some sort of response...
+
 
 # main method to run the web server
 if __name__ == '__main__':
