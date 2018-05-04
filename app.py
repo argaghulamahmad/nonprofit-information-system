@@ -13,7 +13,7 @@ from os import makedirs
 
 # connect to local database
 # change this variables according your local database
-dbname = 'argaghulam'  # database name
+dbname = 'aldihilman'  # database name
 username = 'postgres'  # username
 password = 'postgres'  # password
 
