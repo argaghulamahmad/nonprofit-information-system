@@ -150,28 +150,30 @@ def getUserRole(requestEmail):
 # retrieve all users email
 @app.route('/organization')
 def view_organization_list():
+    cur.execute("""select email_organisasi, website, nama, status_verifikasi from sion.organisasi""")
+    rows = cur.fetchall()
+    organizations = []
+    for row in rows:
+        
+        organization = {
+            'email' : row[0],
+            'website' : row[1],
+            'nama' : row[2],
+            'status_verifikasi' : row[3],
+        }
+        
+        organizations.append(organization)
 
     return render_template(
         'organization_list.html',
         userName=session['name'],
-        userRole=session['role']
-        # , results=my_list
+        userRole=session['role'],
+        organizations=organizations
     )
-    # try:
-    #     cur.execute("""SELECT * from sion.pengguna""")
-    #     rows = cur.fetchall()
-    #     my_list = []
-    #     for row in rows:
-    #         my_list.append(row[0])
 
-    #     return render_template('users.html', results=my_list)
-    # except Exception as e:
-    #     print("Ada kesalahan pada method getUsersEmail(), " + e)
-    #     return "Ada kesalahan pada fungsi getUsersEmail."
-
-@app.route('/organization/<page_id>')
-def view_organization_profle(page_id):
-    pageid = page_id
+@app.route('/organization/<email>')
+def view_organization_profle(email):
+    
     return render_template(
         'organization_profile.html',
         results=my_list
