@@ -1,6 +1,7 @@
 import os
+
 import psycopg2
-from flask import Flask, render_template, session, request, flash
+from flask import Flask, render_template, session, request
 
 # import urllib.parse
 # from os.path import exists
@@ -13,7 +14,7 @@ from flask import Flask, render_template, session, request, flash
 # conn = psycopg2.connect(db)
 
 # connect to local database
-# change this variables according your local database
+# change this variables according to your local database
 dbname = 'argaghulam'  # database name
 username = 'postgres'  # username
 password = 'postgres'  # password
@@ -42,16 +43,17 @@ def home():
 @app.route('/dashboard', defaults={'recentlyRegistered': False})
 def dashboard(recentlyRegistered):
     if session.get('logged_in'):
-        return render_template('dashboard.html', userName=session['name'], userRole=session['role'], recentlyRegistered=recentlyRegistered)
+        return render_template('dashboard.html', userName=session['name'], userRole=session['role'],
+                               recentlyRegistered=recentlyRegistered)
     else:
-        return loginPage()
+        return loginPage(wrongPassword=False, notExist=False)
 
 
 # login controller by Arga G. A.
 # redirect to login page
-@app.route('/login')
-def loginPage():
-    return render_template('login.html')
+@app.route('/login', defaults={'wrongPassword': False, 'notExist': False})
+def loginPage(wrongPassword, notExist):
+    return render_template('login.html', wrongPassword=wrongPassword, notExist=notExist)
 
 
 # login with post method controller by Arga G. A.
@@ -79,16 +81,16 @@ def login():
                 session['{}'.format(userRole)] = True
                 session['logged_in'] = True
                 print("Login success!")
+                return dashboard(recentlyRegistered=False)
             else:
                 print("Login failed, wrong password!")
-                flash('wrong password!')
-            return home()
+                return loginPage(wrongPassword=True, notExist=False)
         else:
             print("Pengguna tidak ada!")
-            flash("User doesnt exist!")
-            return loginPage()
+            return loginPage(wrongPassword=False, notExist=True)
     except Exception as e:
-        return "Ada kesalahan pada fungsi getUsersEmail."
+        print(str(e))
+        return "Ada kesalahan pada sistem"
 
 
 # logout controller by Arga G. A.
@@ -114,7 +116,8 @@ def getUsersEmail():
 
         return render_template('users.html', results=my_list)
     except Exception as e:
-        return "Ada kesalahan pada fungsi getUsersEmail."
+        print(str(e))
+        return "Ada kesalahan pada sistem."
 
 
 # get user role controller by Arga G. A.
@@ -155,7 +158,8 @@ def getUserRole(requestEmail):
             print("Error: tidak terdaftar pada role manapun")
             return "none"
     except Exception as e:
-        return "Ada kesalahan pada fungsi getUsersEmail."
+        print(str(e))
+        return "Ada kesalahan pada sistem."
 
 
 # register page controller by Arga G. A.
