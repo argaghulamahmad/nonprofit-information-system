@@ -16,6 +16,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/static/dashboard.css" rel="stylesheet">
+    <link href="/static/organization.css" rel="stylesheet">
 </head>
 
 <body>
@@ -43,7 +44,9 @@
     <tbody>
         {% for organization in organizations %}
             <tr>
-                <th scope="row">{{organization['email']}}</th>
+                <th class="hover-blue" scope="row" onclick="location.href='/organization/{{organization['email']}}';" >
+                    {{organization['email']}}
+                </th>
                 <td>{{organization['website']}}</td>
                 <td>{{organization['nama']}}</td>
                 <td>{{organization['status_verifikasi']}}</td>

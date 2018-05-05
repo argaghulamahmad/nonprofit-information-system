@@ -173,12 +173,58 @@ def view_organization_list():
 
 @app.route('/organization/<email>')
 def view_organization_profle(email):
+    organization_email = email
     
+    rows = cur.execute(
+            """select * 
+            from sion.organisasi 
+            where email_organisasi={}""".format(
+            "'" + organization_email + "'"))
+    biodata_organisasi = cur.fetchone()
+
+    rows = cur.execute(
+            """select U.email, U.nama, U.alamat_lengkap
+            from sion.pengguna U, sion.pengurus_organisasi P, sion.organisasi O
+            where O.email_organisasi={}
+            and P.organisasi=O.email_organisasi
+            and U.email=P.email""".format(
+            "'" + organization_email + "'"))
+    pengurus_organisasi = cur.fetchall()
+
+    rows = cur.execute(
+            """select *
+            from sion.donatur_organisasi
+            where organisasi={}""".format(
+            "'" + organization_email + "'"))
+    donasi_donatur = cur.fetchall()
+
+    rows = cur.execute(
+            """select *
+            from sion.sponsor_organisasi
+            where organisasi={}""".format(
+            "'" + organization_email + "'"))
+    donasi_sponsor = cur.fetchall()
+
+    rows = cur.execute(
+            """select sum(S.nominal)+sum(D.nominal)
+            from sion.sponsor_organisasi S,
+            sion.donatur_organisasi D
+            where S.organisasi={}
+            and D.organisasi={}""".format(
+            "'" + organization_email + "'",
+            "'" + organization_email + "'"))
+    total_donasi = cur.fetchone()
+
     return render_template(
         'organization_profile.html',
-        results=my_list
+        userName=session['name'],
+        userRole=session['role'],
+        biodata_organisasi=biodata_organisasi,
+        pengurus_organisasi=pengurus_organisasi,
+        donasi_donatur=donasi_donatur,
+        donasi_sponsor=donasi_sponsor,
+        total_donasi=total_donasi
     )
-    # You might want to return some sort of response...
 
 
 # main method to run the web server
