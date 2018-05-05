@@ -226,8 +226,26 @@ def view_organization_profle(email):
         total_donasi=total_donasi
     )
 
+@app.route('/donate/organization') 
+def view_donate_organization():
+    rows = cur.execute(
+            """select nama
+            from sion.organisasi""")
+    organizations = cur.fetchall()
+    
+    return render_template(
+        'donate_organization.html',
+        userName=session['name'],
+        userRole=session['role'],
+        organizations=organizations
+    )
+
+@app.route('/donate/organization', methods=['POST']) 
+def donate_organization_form():
+    pass
 
 # main method to run the web server
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
+    app.debug = True    
     app.run()
