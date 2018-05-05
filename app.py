@@ -1,9 +1,10 @@
 import os
 import psycopg2
 from flask import Flask, render_template, session, request, flash
-import urllib.parse
-from os.path import exists
-from os import makedirs
+
+# import urllib.parse
+# from os.path import exists
+# from os import makedirs
 
 # connect for deployed application at heroku
 # url = urlparse.urlparse(os.environ.get('DATABASE_URL'))
@@ -19,6 +20,7 @@ password = 'postgres'  # password
 
 conn_string = "host='localhost' dbname=%s user=%s password=%s " % (dbname, username, password)
 conn = psycopg2.connect(conn_string)
+conn.autocommit = True
 
 cur = conn.cursor()
 
@@ -32,14 +34,15 @@ def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return dashboard()
+        return dashboard(recentlyRegistered=False)
+
 
 # dashboard controller by Arga G. A.
 # provide dashboard page
-@app.route('/dashboard')
-def dashboard():
+@app.route('/dashboard', defaults={'recentlyRegistered': False})
+def dashboard(recentlyRegistered):
     if session.get('logged_in'):
-        return render_template('dashboard.html', userName=session['name'], userRole=session['role'])
+        return render_template('dashboard.html', userName=session['name'], userRole=session['role'], recentlyRegistered=recentlyRegistered)
     else:
         return loginPage()
 
@@ -57,8 +60,8 @@ def loginPage():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        requestEmail = request.form['email']
-        requestPassword = request.form['password']
+        requestEmail = request.form["email"]
+        requestPassword = request.form["password"]
 
         cur.execute("""select * from sion.pengguna where email = {}""".format("'" + requestEmail + "'"))
         userObj = cur.fetchone()
@@ -85,7 +88,6 @@ def login():
             flash("User doesnt exist!")
             return loginPage()
     except Exception as e:
-        print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
 
@@ -112,7 +114,6 @@ def getUsersEmail():
 
         return render_template('users.html', results=my_list)
     except Exception as e:
-        print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
 
@@ -154,7 +155,6 @@ def getUserRole(requestEmail):
             print("Error: tidak terdaftar pada role manapun")
             return "none"
     except Exception as e:
-        print("Ada kesalahan pada method getUsersEmail(), " + e)
         return "Ada kesalahan pada fungsi getUsersEmail."
 
 
@@ -185,23 +185,152 @@ def registerDonaturPage():
 def registerSponsorPage():
     return render_template('register-sponsor.html')
 
-# todo
-# @app.route('/register-relawan', methods=['POST'])
-# def registerRelawan():
-#     return render_template('register-relawan.html')
-#
-#
-# @app.route('/register-donatur', methods=['POST'])
-# def registerDonatur():
-#     return render_template('register-donatur.html')
-#
-#
-# @app.route('/register-sponsor', methods=['POST'])
-# def registerSponsor():
-#     return render_template('register-sponsor.html')
+
+# created by Arga G. A.
+# method to handle request post of register relawan
+@app.route('/register-relawan', methods=['POST'])
+def registerRelawan():
+    nama = request.form["nama"]
+    email = request.form["email"]
+    password = request.form["password"]
+
+    if not isPenggunaExists(email):
+        kecamatan = request.form["kecamatan"]
+        kabupaten = request.form["kabupaten"]
+        provinsi = request.form["provinsi"]
+        kodepos = request.form["kode-pos"]
+        jalan = request.form["jalan"]
+        alamat_lengkap = jalan + ", " + kecamatan + ", " + kabupaten + ", " + provinsi + ", " + kodepos
+
+        birthdate = '/'.join(reversed(request.form["tanggal-lahir"].split('-')))
+        nomorHandphone = request.form["nomor-handphone"]
+        skills = request.form["skills"]
+
+        # print(nama + " " + email + " " + password)
+        # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
+        # print(birthdate + " " + nomorHandphone + " " + skill)
+
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email + "'",
+                "'" + password + "'",
+                "'" + nama + "'",
+                "'" + alamat_lengkap + "'"))
+        cur.execute(
+            """INSERT INTO SION.RELAWAN (email, no_hp, tanggal_lahir) VALUES ({}, {}, {})""".format("'" + email + "'",
+                                                                                                    "'" + nomorHandphone + "'",
+                                                                                                    "'" + birthdate + "'"))
+
+        listSkills = skills.split(",")
+        for skill in listSkills:
+            cur.execute(
+                """INSERT INTO SION.KEAHLIAN_RELAWAN (email, keahlian) VALUES ({}, {})""".format("'" + email + "'",
+                                                                                                 "'" + skill + "'"))
+
+        session['email'] = email
+        session['name'] = nama
+        session['role'] = 'relawan'
+        session['relawan'] = True
+        session['logged_in'] = True
+        return dashboard(recentlyRegistered=True)
+    else:
+        # todo
+        return registerPage()
+
+
+# created by Arga G. A.
+# method to handle request post of register donatur
+@app.route('/register-donatur', methods=['POST'])
+def registerDonatur():
+    nama = request.form["nama"]
+    email = request.form["email"]
+    password = request.form["password"]
+
+    if not isPenggunaExists(email):
+        kecamatan = request.form["kecamatan"]
+        kabupaten = request.form["kabupaten"]
+        provinsi = request.form["provinsi"]
+        kodepos = request.form["kode-pos"]
+        jalan = request.form["jalan"]
+        alamat_lengkap = jalan + ", " + kecamatan + ", " + kabupaten + ", " + provinsi + ", " + kodepos
+
+        # print(nama + " " + email + " " + password)
+        # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
+
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email + "'",
+                "'" + password + "'",
+                "'" + nama + "'",
+                "'" + alamat_lengkap + "'"))
+        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
+
+        session['email'] = email
+        session['name'] = nama
+        session['role'] = 'donatur'
+        session['donatur'] = True
+        session['logged_in'] = True
+        return dashboard(recentlyRegistered=True)
+    else:
+        # todo
+        return registerPage()
+
+
+# created by Arga G. A.
+# method to handle request post of register sponsor
+@app.route('/register-sponsor', methods=['POST'])
+def registerSponsor():
+    nama = request.form["nama"]
+    email = request.form["email"]
+    password = request.form["password"]
+
+    if not isPenggunaExists(email):
+        kecamatan = request.form["kecamatan"]
+        kabupaten = request.form["kabupaten"]
+        provinsi = request.form["provinsi"]
+        kodepos = request.form["kode-pos"]
+        jalan = request.form["jalan"]
+        alamat_lengkap = jalan + ", " + kecamatan + ", " + kabupaten + ", " + provinsi + ", " + kodepos
+
+        logo = request.form["logo"]
+
+        # print(nama + " " + email + " " + password)
+        # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
+        # print(logo)
+
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email + "'",
+                "'" + password + "'",
+                "'" + nama + "'",
+                "'" + alamat_lengkap + "'"))
+        cur.execute("""INSERT INTO SION.SPONSOR (email, logo_sponsor) VALUES ({}, {})""".format("'" + email + "'",
+                                                                                                "'" + logo + "'"))
+
+        session['email'] = email
+        session['name'] = nama
+        session['role'] = 'sponsor'
+        session['sponsor'] = True
+        session['logged_in'] = True
+        return dashboard(recentlyRegistered=True)
+    else:
+        # todo
+        return registerPage()
+
+
+# created by Arga G. A.
+# method is pengguna exist?
+def isPenggunaExists(email):
+    cur.execute("""SELECT * FROM SION.PENGGUNA WHERE email = {}""".format("'" + email + "'"))
+    user = cur.fetchone()
+    if user:
+        return True
+    else:
+        return False
 
 
 # main method to run the web server
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
+    app.debug = True
     app.run()

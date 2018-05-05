@@ -37,10 +37,10 @@
             <div class="row">
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Form Pendaftaran Sponsor</h4>
-                    <form class="needs-validation" novalidate>
+                    <form class="needs-validation" novalidate action="/register-sponsor" method="POST">
                         <div class="mb-3">
                             <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <input name="nama" type="text" class="form-control" id="name" placeholder="" value="" required>
                             <div class="invalid-feedback">
                                 Valid sponsor name is required.
                             </div>
@@ -48,7 +48,7 @@
 
                         <div class="mb-3">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                            <input name="email" type="email" class="form-control" id="email" placeholder="you@example.com">
                             <div class="invalid-feedback">
                                 Please enter a valid email address for shipping updates.
                             </div>
@@ -56,13 +56,13 @@
 
                         <div class="mb-3">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password"
+                            <input name="password" type="password" class="form-control" id="password"
                                    placeholder="Password">
                         </div>
 
                         <div class="mb-3">
                             <label for="address">Kecamatan</label>
-                            <input type="text" class="form-control" id="kecamatan" placeholder="" required>
+                            <input name="kecamatan" type="text" class="form-control" id="kecamatan" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kecamatan alamat anda.
                             </div>
@@ -70,7 +70,7 @@
 
                         <div class="mb-3">
                             <label for="address">Kabupaten</label>
-                            <input type="text" class="form-control" id="kabupaten" placeholder="" required>
+                            <input name="kabupaten" type="text" class="form-control" id="kabupaten" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kabupaten alamat anda.
                             </div>
@@ -78,7 +78,7 @@
 
                         <div class="mb-3">
                             <label for="address">Provinsi</label>
-                            <input type="text" class="form-control" id="provinsi" placeholder="" required>
+                            <input name="provinsi" type="text" class="form-control" id="provinsi" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan provinsi alamat anda.
                             </div>
@@ -86,7 +86,7 @@
 
                         <div class="mb-3">
                             <label for="address">Kode pos</label>
-                            <input type="text" class="form-control" id="kode pos" placeholder="" required>
+                            <input name="kode-pos" type="text" class="form-control" id="kode-pos" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kode pos alamat anda.
                             </div>
@@ -94,7 +94,7 @@
 
                         <div class="mb-3">
                             <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
-                            <input type="text" class="form-control" id="jalan" placeholder="" required>
+                            <input name="jalan" type="text" class="form-control" id="jalan" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan jalan alamat anda.
                             </div>
@@ -104,7 +104,7 @@
                             <label for="logo-picture">Logo Sponsor</label>
                             <div class="form-group row">
                                 <div class="col-10">
-                                    <input class="form-control" type="url" value=""
+                                    <input name="logo" class="form-control" type="url" value=""
                                            id="url-input">
                                 </div>
                             </div>
