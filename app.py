@@ -439,12 +439,57 @@ def isPenggunaExists(email):
     else:
         return False
 
+def isOrganisasiExists(email):
+    cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
+    organization = cur.fetchone()
+    if organization:
+        return True
+    else:
+        return False
+
 #created by Bram
 @app.route('/register-organisasi', defaults={'exist': False})
 def registerOrganisasiPage(exist):
     return render_template('register-organisasi.html', exist=exist)
 
+#created by Bram
+@app.route('/register-organisasi', methods=['POST'])
+def registerOrganisasi():
+    nama_organisasi = request.form["nama-organisasi"]
+    email_organisasi = request.form["email-organisasi"]
+    nama_pengurus = request.form["nama-pengurus"]
+    email_pengurus = request.form["email-pengurus"]
 
+    if (not isPenggunaExists(email_pengurus)) and (not isOrganisasiExists(email_organisasi)):
+        kecamatan = request.form["kecamatan"]
+        kabupaten = request.form["kabupaten"]
+        provinsi = request.form["provinsi"]
+        kodepos = request.form["kode-pos"]
+        jalan = request.form["jalan"]
+
+        alamat_lengkap = jalan + ", " + kecamatan + ", " + kabupaten + ", " + provinsi + ", " + kodepos
+
+        # print(nama + " " + email + " " + password)
+        # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
+
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email + "'",
+                "'" + password + "'",
+                "'" + nama + "'",
+                "'" + alamat_lengkap + "'"))
+        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
+
+        session['email'] = email
+        session['name'] = nama
+        session['role'] = 'donatur'
+        session['donatur'] = True
+        session['logged_in'] = True
+
+        print("Organisasi berhasil dimasukkan!")
+        return dashboard(recentlyRegistered=True)
+    else:
+        return registerOrganisasiPage(exist=True)
 
 # main method to run the web server
 if __name__ == '__main__':

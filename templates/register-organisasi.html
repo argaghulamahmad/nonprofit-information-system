@@ -62,7 +62,7 @@
                     <form class="needs-validation" novalidate action="/register-relawan" method="POST">
                         <div class="mb-3">
                             <label for="name">Nama Organisasi</label>
-                            <input name="nama" type="text" class="form-control" id="name" placeholder="" value=""
+                            <input name="nama-organisasi" type="text" class="form-control" id="name" placeholder="" value=""
                                    required>
                             <div class="invalid-feedback">
                                 Valid organization name is required.
@@ -70,18 +70,21 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="password">Website</label>
-                            <input name="password" type="password" class="form-control" id="password"
-                                   placeholder="Password" data-toggle="popover" title="Password Info" data-content=""
-                                   required>
+                            <label for="logo-picture">Website</label>
+                            <div class="form-group row">
+                                <div class="col-10">
+                                    <input name="website" class="form-control" type="url" value=""
+                                           id="url-input" placeholder="https://sion.com/" required>
+                                </div>
+                            </div>
                             <div class="invalid-feedback">
-                                Valid website is required.
+                                Silahkan masukkan website organisasi anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="email">Email Organisasi</label>
-                            <input name="email" type="email" class="form-control" id="email"
+                            <input name="email-organisasi" type="email" class="form-control" id="email"
                                    placeholder="you@example.com" required>
                             <div class="invalid-feedback">
                                 Valid organization email is required.
@@ -93,7 +96,7 @@
                             <input name="kecamatan" type="text" class="form-control" id="kecamatan" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kecamatan alamat anda.
+                                Silahkan masukkan kecamatan alamat organisasi anda.
                             </div>
                         </div>
 
@@ -102,7 +105,7 @@
                             <input name="kabupaten" type="text" class="form-control" id="kabupaten" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kabupaten alamat anda.
+                                Silahkan masukkan kabupaten alamat organisasi anda.
                             </div>
                         </div>
 
@@ -111,7 +114,7 @@
                             <input name="provinsi" type="text" class="form-control" id="provinsi" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan provinsi alamat anda.
+                                Silahkan masukkan provinsi alamat organisasi anda.
                             </div>
                         </div>
 
@@ -120,7 +123,7 @@
                             <input name="kode-pos" type="text" class="form-control" id="kode-pos" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kode pos alamat anda.
+                                Silahkan masukkan kode pos alamat organisasi anda.
                             </div>
                         </div>
 
@@ -128,43 +131,46 @@
                             <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
                             <input name="jalan" type="text" class="form-control" id="jalan" placeholder="" required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan jalan alamat anda.
+                                Silahkan masukkan jalan alamat organisasi anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="birthdate">Tujuan Organisasi</label>
-                            <div>
-                                <label for="tanggal-lahir"></label><input name="tanggal-lahir" class="form-control"
-                                                                          type="date" value=""
-                                                                          id="tanggal-lahir" required>
-                            </div>
+                            <label for="name">Tujuan Organisasi</label>
+                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan tujuan organisasi anda.
                             </div>
                         </div>
 
+
                         <div class="mb-3">
-                            <label for="example-tel-input">Nomor Handphone</label>
-                            <div>
-                                <label for="nomor-handphone"></label><input name="nomor-handphone" class="form-control"
-                                                                            type="tel" value=""
-                                                                            id="nomor-handphone" placeholder=""
-                                                                            required>
-                            </div>
+                            <label for="name">Nama Pengurus</label>
+                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                                   required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan nomor handphone anda.
+                                Silahkan masukkan nama pengurus organisasi anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="skill">Keahlian yang anda dimiliki</label>
-                            <textarea name="skills" class="form-control" rows="5" id="skills"
-                                      placeholder="Programming, Gaming" required></textarea>
+                            <label for="email">Email Pengurus</label>
+                            <input name="email-pengurus" type="email" class="form-control" id="email"
+                                   placeholder="you@example.com" required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan keahlian anda.
+                                Valid email is required.
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="address">Alamat Pengurus</label>
+                            <input name="alamat-pengurus" type="text" class="form-control" id="jalan" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan alamat pengurus oragnisasi anda.
+                            </div>
+                        </div>
+
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
                     </form>
                 </div>
@@ -213,23 +219,6 @@
                     });
                 }, false);
             })();
-
-            $(document).ready(function () {
-                $('input[type=password]').keyup(function () {
-                    var pswd = $(this).val();
-                    console.log(pswd);
-                    //validate letter
-                    if (pswd.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
-                    )) {
-                        $('input[type=password]').attr('data-content', 'Valid Password').removeClass('bg-danger').removeClass('text-white').popover('show');
-                        console.log('valid');
-                    } else {
-                        $('input[type=password]').attr('data-content', 'Invalid Password: Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
-                        ).addClass('bg-danger').addClass('text-white').popover('show');
-                        console.log('invalid');
-                    }
-                })
-            });
 
             {% if exist %}
                 $('#user-exist').modal({show: true});

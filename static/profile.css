@@ -15,6 +15,14 @@ body {
 .carousel {
   margin-bottom: 4rem;
 }
+
+.carousel .logo {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   bottom: 3rem;
