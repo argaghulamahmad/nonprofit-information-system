@@ -1,0 +1,148 @@
+<!--Created by Arga G. A.-->
+<!--html template for register donatur page-->
+{% block body %}
+    {% if session['logged_in'] %}
+        <p>You're logged in already!</p>
+    {% else %}
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="description" content="">
+            <meta name="author" content="">
+            {#<link rel="icon" href="../../../../favicon.ico">#}
+
+            <title>Register Donatur - SION</title>
+
+            <!-- Bootstrap core CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+                  integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+                  crossorigin="anonymous">
+
+            <!-- Custom styles for this template -->
+            <link href="/static/form-validation.css" rel="stylesheet">
+        </head>
+
+        <body class="bg-light">
+
+        <div class="container">
+            <div class="py-5 text-center">
+                <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt=""
+                     width="72" height="72">
+                <h2>Register Donatur</h2>
+                {#<p class="lead"></p>#}
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 order-md-1">
+                    <h4 class="mb-3">Form Pendaftaran Donatur</h4>
+                    <form class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name">Nama</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <div class="invalid-feedback">
+                                Valid donatur name is required.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password"
+                                   placeholder="Password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Kecamatan</label>
+                            <input type="text" class="form-control" id="kecamatan" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan kecamatan alamat anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Kabupaten</label>
+                            <input type="text" class="form-control" id="kabupaten" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan kabupaten alamat anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Provinsi</label>
+                            <input type="text" class="form-control" id="provinsi" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan provinsi alamat anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Kode pos</label>
+                            <input type="text" class="form-control" id="kode pos" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan kode pos alamat anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
+                            <input type="text" class="form-control" id="jalan" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan jalan alamat anda.
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+            <footer class="my-5 pt-5 text-muted text-center text-small">
+                <p class="mb-1">SION © 2018</p>
+            </footer>
+        </div>
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+        <script src="../../assets/js/vendor/popper.min.js"></script>
+        <script src="../../dist/js/bootstrap.min.js"></script>
+        <script src="../../assets/js/vendor/holder.min.js"></script>
+        <script>
+            // Example starter JavaScript for disabling form submissions if there are invalid fields
+            (function () {
+                'use strict';
+
+                window.addEventListener('load', function () {
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.getElementsByClassName('needs-validation');
+
+                    // Loop over them and prevent submission
+                    var validation = Array.prototype.filter.call(forms, function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (form.checkValidity() === false) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                            form.classList.add('was-validated');
+                        }, false);
+                    });
+                }, false);
+            })();
+        </script>
+        </body>
+        </html>
+    {% endif %}
+{% endblock %}
