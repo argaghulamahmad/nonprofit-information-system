@@ -25,6 +25,28 @@
         </head>
 
         <body class="bg-light">
+        <!-- Modal -->
+        <div class="modal fade" id="user-exist" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
+                        <h4 class="modal-title" style="padding-left: auto; padding-right: auto">Login tidak
+                            berhasil!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-warning">Email yang anda masukkan sudah terdaftar dalam sistem! Silahkan coba
+                            kembali.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         <div class="container">
             <div class="py-5 text-center">
@@ -37,10 +59,11 @@
             <div class="row">
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Form Pendaftaran Relawan</h4>
-                    <form class="needs-validation" novalidate>
+                    <form class="needs-validation" novalidate action="/register-relawan" method="POST">
                         <div class="mb-3">
                             <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <input name="nama" type="text" class="form-control" id="name" placeholder="" value=""
+                                   required>
                             <div class="invalid-feedback">
                                 Valid relawan name is required.
                             </div>
@@ -48,21 +71,27 @@
 
                         <div class="mb-3">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                            <input name="email" type="email" class="form-control" id="email"
+                                   placeholder="you@example.com" required>
                             <div class="invalid-feedback">
-                                Please enter a valid email address for shipping updates.
+                                Valid relawan email is required.
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password"
-                                   placeholder="Password">
+                            <input name="password" type="password" class="form-control" id="password"
+                                   placeholder="Password" data-toggle="popover" title="Password Info" data-content=""
+                                   required>
+                            <div class="invalid-feedback">
+                                Valid password is required.
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="address">Kecamatan</label>
-                            <input type="text" class="form-control" id="kecamatan" placeholder="" required>
+                            <input name="kecamatan" type="text" class="form-control" id="kecamatan" placeholder=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kecamatan alamat anda.
                             </div>
@@ -70,7 +99,8 @@
 
                         <div class="mb-3">
                             <label for="address">Kabupaten</label>
-                            <input type="text" class="form-control" id="kabupaten" placeholder="" required>
+                            <input name="kabupaten" type="text" class="form-control" id="kabupaten" placeholder=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kabupaten alamat anda.
                             </div>
@@ -78,7 +108,8 @@
 
                         <div class="mb-3">
                             <label for="address">Provinsi</label>
-                            <input type="text" class="form-control" id="provinsi" placeholder="" required>
+                            <input name="provinsi" type="text" class="form-control" id="provinsi" placeholder=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan provinsi alamat anda.
                             </div>
@@ -86,7 +117,8 @@
 
                         <div class="mb-3">
                             <label for="address">Kode pos</label>
-                            <input type="text" class="form-control" id="kode pos" placeholder="" required>
+                            <input name="kode-pos" type="text" class="form-control" id="kode-pos" placeholder=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan kode pos alamat anda.
                             </div>
@@ -94,7 +126,7 @@
 
                         <div class="mb-3">
                             <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
-                            <input type="text" class="form-control" id="jalan" placeholder="" required>
+                            <input name="jalan" type="text" class="form-control" id="jalan" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan jalan alamat anda.
                             </div>
@@ -103,22 +135,35 @@
                         <div class="mb-3">
                             <label for="birthdate">Tanggal Lahir</label>
                             <div>
-                                <label for="tanggal-lahir"></label><input class="form-control" type="date" value=""
-                                                                          id="tanggal-lahir">
+                                <label for="tanggal-lahir"></label><input name="tanggal-lahir" class="form-control"
+                                                                          type="date" value=""
+                                                                          id="tanggal-lahir" required>
+                            </div>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan tanggal lahir anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="example-tel-input">Nomor Handphone</label>
                             <div>
-                                <label for="nomor-handphone"></label><input class="form-control" type="tel" value=""
-                                                                            id="nomor-handphone">
+                                <label for="nomor-handphone"></label><input name="nomor-handphone" class="form-control"
+                                                                            type="tel" value=""
+                                                                            id="nomor-handphone" placeholder=""
+                                                                            required>
+                            </div>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan nomor handphone anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="skill">Keahlian yang anda dimiliki</label>
-                            <textarea class="form-control" rows="5" id="skill"></textarea>
+                            <textarea name="skills" class="form-control" rows="5" id="skills"
+                                      placeholder="Programming, Gaming" required></textarea>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan keahlian anda.
+                            </div>
                         </div>
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
                     </form>
@@ -126,7 +171,7 @@
             </div>
 
             <footer class="my-5 pt-5 text-muted text-center text-small">
-                <p class="mb-1">SION © 2018</p>
+                <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a> © 2018</p>
             </footer>
         </div>
 
@@ -136,10 +181,17 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
                 integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
                 crossorigin="anonymous"></script>
-        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-        <script src="../../assets/js/vendor/popper.min.js"></script>
-        <script src="../../dist/js/bootstrap.min.js"></script>
-        <script src="../../assets/js/vendor/holder.min.js"></script>
+        <script>window.jQuery || document.write('<script\n' +
+            '  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"\n' +
+            '  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="\n' +
+            '  crossorigin="anonymous"><\/script>')</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+                integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.js"></script>
         <script>
             // Example starter JavaScript for disabling form submissions if there are invalid fields
             (function () {
@@ -161,6 +213,30 @@
                     });
                 }, false);
             })();
+
+            $(document).ready(function () {
+                $('input[type=password]').keyup(function () {
+                    var pswd = $(this).val();
+                    console.log(pswd);
+                    //validate letter
+                    if (pswd.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+                    )) {
+                        $('input[type=password]').attr('data-content', 'Valid Password').removeClass('bg-danger').removeClass('text-white').popover('show');
+                        console.log('valid');
+                    } else {
+                        $('input[type=password]').attr('data-content', 'Invalid Password: Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+                        ).addClass('bg-danger').addClass('text-white').popover('show');
+                        console.log('invalid');
+                    }
+                })
+            });
+
+            {% if exist %}
+                $('#user-exist').modal({show: true});
+                console.log("User exist!");
+            {% elif not wrongInput %}
+                $('#user-exist').modal({show: false});
+            {% endif %}
         </script>
         </body>
         </html>

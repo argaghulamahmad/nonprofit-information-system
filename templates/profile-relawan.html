@@ -9,6 +9,7 @@
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
           <h5 class="my-0 mr-md-auto font-weight-normal">SION</h5>
+          <a class="btn" href="/dashboard">Home</a>
           <a class="btn btn-outline-warning" href="/logout">Log out</a>
     </div>
     <main role="main">
@@ -17,7 +18,7 @@
           <div class="carousel-item active">
             <div class="container">
               <div class="carousel-caption">
-                <h1>Nama</h1>
+                <h1>{{ nama }}</h1>
                 <p>Relawan</p>
               </div>
             </div>
@@ -32,35 +33,35 @@
         <div class="row">
           <div class="col-lg-4">
             <h2>Email</h2>
-            <p>bram@ui.com</p>
+            <p>{{ email }}</p>
           </div>
           <div class="col-lg-4">
-            <h2>Alamat</h2>
-            <h5>Kecamatan</h5>
-            <p>asdasd</p>
-            <h5>Kabupaten</h5>
-            <p>asdasd</p>
-            <h5>Provinsi</h5>
-            <p>asdasd</p>
-            <h5>Kode Pos</h5>
-            <p>asdasd</p>
-            <h5>Jalan/Desa/Kelurahan/No.Rumah</h5>
-            <p>asdasd</p>
+            <h2>Alamat Lengkap</h2>
+            <p>{{ alamat }}</p>
           </div>
           <div class="col-lg-4">
             <h2>Tanggal Lahir</h2>
-            <p>bram@ui.com</p>
+            <p>{{ tanggal_lahir }}</p>
           </div>
           <div class="col-lg-4">
             <h2>Nomor Handphone</h2>
-            <p>bram@ui.com</p>
+            <p>{{ no_hp }}</p>
           </div>
           <div class="col-lg-4">
             <h2>Keahlian yang Dimiliki</h2>
-            <p>bram@ui.com</p>
+            {% if keahlian %}
+              {% for data in keahlian %}
+                <p>{{ data.0 }}</p>
+              {% endfor %}
+            {% else %}
+            <p>Tidak ada keahlian</p>
+            {% endif %}
           </div>
         </div>
       </div>
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+          <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a> © 2018</p>
+      </footer>
     </main>
 </body>
 </html>

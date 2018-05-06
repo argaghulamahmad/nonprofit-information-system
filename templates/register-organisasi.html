@@ -1,5 +1,5 @@
 <!--Created by Arga G. A.-->
-<!--html template for register donatur page-->
+<!--html template for register relawan page-->
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
@@ -13,7 +13,7 @@
             <meta name="author" content="">
             {#<link rel="icon" href="../../../../favicon.ico">#}
 
-            <title>Register Donatur - SION</title>
+            <title>Register Organisasi - SION</title>
 
             <!-- Bootstrap core CSS -->
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
@@ -50,39 +50,41 @@
 
         <div class="container">
             <div class="py-5 text-center">
-                <h2>Register Donatur</h2>
+                <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt=""
+                     width="72" height="72">
+                <h2>Register Organisasi</h2>
                 {#<p class="lead"></p>#}
             </div>
 
             <div class="row">
                 <div class="col-md-8 order-md-1">
-                    <h4 class="mb-3">Form Pendaftaran Donatur</h4>
-                    <form class="needs-validation" novalidate action="/register-donatur" method="POST">
+                    <h4 class="mb-3">Form Pendaftaran Organisasi</h4>
+                    <form class="needs-validation" novalidate action="/register-relawan" method="POST">
                         <div class="mb-3">
-                            <label for="name">Nama</label>
+                            <label for="name">Nama Organisasi</label>
                             <input name="nama" type="text" class="form-control" id="name" placeholder="" value=""
                                    required>
                             <div class="invalid-feedback">
-                                Valid donatur name is required.
+                                Valid organization name is required.
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="email">Email</label>
-                            <input name="email" type="email" class="form-control" id="email"
-                                   placeholder="you@example.com" required>
-                            <div class="invalid-feedback">
-                                Valid donatur email is required.
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password">Password</label>
+                            <label for="password">Website</label>
                             <input name="password" type="password" class="form-control" id="password"
                                    placeholder="Password" data-toggle="popover" title="Password Info" data-content=""
                                    required>
                             <div class="invalid-feedback">
-                                Valid password is required.
+                                Valid website is required.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email Organisasi</label>
+                            <input name="email" type="email" class="form-control" id="email"
+                                   placeholder="you@example.com" required>
+                            <div class="invalid-feedback">
+                                Valid organization email is required.
                             </div>
                         </div>
 
@@ -130,6 +132,39 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="birthdate">Tujuan Organisasi</label>
+                            <div>
+                                <label for="tanggal-lahir"></label><input name="tanggal-lahir" class="form-control"
+                                                                          type="date" value=""
+                                                                          id="tanggal-lahir" required>
+                            </div>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan tujuan organisasi anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="example-tel-input">Nomor Handphone</label>
+                            <div>
+                                <label for="nomor-handphone"></label><input name="nomor-handphone" class="form-control"
+                                                                            type="tel" value=""
+                                                                            id="nomor-handphone" placeholder=""
+                                                                            required>
+                            </div>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan nomor handphone anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="skill">Keahlian yang anda dimiliki</label>
+                            <textarea name="skills" class="form-control" rows="5" id="skills"
+                                      placeholder="Programming, Gaming" required></textarea>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan keahlian anda.
+                            </div>
+                        </div>
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
                     </form>
                 </div>
