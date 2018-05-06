@@ -72,7 +72,7 @@ def login():
             correctPassword = userObj[1]
             requestName = userObj[2]
 
-            print(requestName + " " + requestEmail + " " + requestPassword + " " + correctPassword)
+            # print(requestName + " " + requestEmail + " " + requestPassword + " " + correctPassword)
             if requestPassword == correctPassword:
                 session['email'] = requestEmail
                 session['name'] = requestName
@@ -128,19 +128,23 @@ def getUserRole(requestEmail):
         cur.execute(
             """select * from sion.pengguna, sion.donatur where sion.pengguna.email = sion.donatur.email and sion.pengguna.email = {}""".format(
                 "'" + requestEmail + "'"))
-        isDonatur = cur.fetchall
+        isDonatur = cur.fetchall()
+        print(isDonatur)
         cur.execute(
             """select * from sion.pengguna, sion.relawan where sion.pengguna.email = sion.relawan.email and sion.pengguna.email = {}""".format(
                 "'" + requestEmail + "'"))
-        isRelawan = cur.fetchall
+        isRelawan = cur.fetchall()
+        print(isRelawan)
         cur.execute(
             """select * from sion.pengguna, sion.sponsor where pengguna.email = sion.sponsor.email and sion.pengguna.email = {}""".format(
                 "'" + requestEmail + "'"))
-        isSponsor = cur.fetchall
+        isSponsor = cur.fetchall()
+        print(isSponsor)
         cur.execute(
             """select * from sion.pengguna, sion.pengurus_organisasi where sion.pengguna.email = sion.pengurus_organisasi.email and pengguna.email = {}""".format(
                 "'" + requestEmail + "'"))
-        isPengurusOrganisasi = cur.fetchall
+        isPengurusOrganisasi = cur.fetchall()
+        print(isPengurusOrganisasi)
 
         if isRelawan:
             print("relawan")
@@ -171,23 +175,23 @@ def registerPage():
 
 # register relawan page controller by Arga G. A.
 # provide register relawan page
-@app.route('/register-relawan')
-def registerRelawanPage():
-    return render_template('register-relawan.html')
+@app.route('/register-relawan', defaults={'exist': False})
+def registerRelawanPage(exist):
+    return render_template('register-relawan.html', exist=exist)
 
 
 # register donatur page controller by Arga G. A.
 # provide register donatur page
-@app.route('/register-donatur')
-def registerDonaturPage():
-    return render_template('register-donatur.html')
+@app.route('/register-donatur', defaults={'exist': False})
+def registerDonaturPage(exist):
+    return render_template('register-donatur.html', exist=exist)
 
 
 # register sponsor page controller by Arga G. A.
 # provide register sponsor page
-@app.route('/register-sponsor')
-def registerSponsorPage():
-    return render_template('register-sponsor.html')
+@app.route('/register-sponsor', defaults={'exist': False})
+def registerSponsorPage(exist):
+    return render_template('register-sponsor.html', exist=exist)
 
 
 # created by Arga G. A.
@@ -236,10 +240,11 @@ def registerRelawan():
         session['role'] = 'relawan'
         session['relawan'] = True
         session['logged_in'] = True
+
+        print("Relawan berhasil dimasukkan!")
         return dashboard(recentlyRegistered=True)
     else:
-        # todo
-        return registerPage()
+        return registerRelawanPage(exist=True)
 
 
 # created by Arga G. A.
@@ -274,10 +279,11 @@ def registerDonatur():
         session['role'] = 'donatur'
         session['donatur'] = True
         session['logged_in'] = True
+
+        print("Donatur berhasil dimasukkan!")
         return dashboard(recentlyRegistered=True)
     else:
-        # todo
-        return registerPage()
+        return registerDonaturPage(exist=True)
 
 
 # created by Arga G. A.
@@ -316,10 +322,11 @@ def registerSponsor():
         session['role'] = 'sponsor'
         session['sponsor'] = True
         session['logged_in'] = True
+
+        print("Sponsor berhasil dimasukkan!")
         return dashboard(recentlyRegistered=True)
     else:
-        # todo
-        return registerPage()
+        return registerSponsorPage(exist=True)
 
 
 # created by Arga G. A.
