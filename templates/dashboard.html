@@ -62,7 +62,7 @@
                     </div>
                     <div class="card-body">
                         <p>Melihat profil anda yang telah terdaftar dalam database SION.</p>
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Lihat profil</button>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToProfile()">Lihat profil</button>
                     </div>
                 </div>
                 <div class="card mb-4 box-shadow">
@@ -159,6 +159,10 @@
                 fg: '#eceeef',
                 text: 'Thumbnail'
             });
+
+        function goToProfile() {
+          location.href = "/profile"
+        }
         </script>
         </body>
     {% else %}

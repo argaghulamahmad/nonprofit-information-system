@@ -14,8 +14,8 @@ from flask import Flask, render_template, session, request
 # conn = psycopg2.connect(db)
 
 # connect to local database
-# change this variables according to your local database
-dbname = 'argaghulam'  # database name
+# change this variables according your local database
+dbname = 'bramsedana'  # database name
 username = 'postgres'  # username
 password = 'postgres'  # password
 
@@ -119,7 +119,6 @@ def getUsersEmail():
         print(str(e))
         return "Ada kesalahan pada sistem."
 
-
 # get user role controller by Arga G. A.
 # determine role of user by using email
 # retrieve user role
@@ -165,6 +164,107 @@ def getUserRole(requestEmail):
         print(str(e))
         return "Ada kesalahan pada sistem."
 
+#created by Bram
+def getInformationRelawan(requestEmail):
+    cur.execute(
+        """select keahlian from sion.KEAHLIAN_RELAWAN where sion.KEAHLIAN_RELAWAN.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['keahlian'] = cur.fetchall()
+    cur.execute(
+        """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['nama'] = cur.fetchone()[0]
+    cur.execute(
+        """select alamat_lengkap from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['alamat'] = cur.fetchone()[0]
+    cur.execute(
+        """select tanggal_lahir from sion.RELAWAN where sion.RELAWAN.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['tanggal_lahir'] = cur.fetchone()[0]
+    cur.execute(
+        """select no_hp from sion.RELAWAN where sion.RELAWAN.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['no_hp'] = cur.fetchone()[0]
+
+#created by Bram
+def getInformationDonatur(requestEmail):
+    cur.execute(
+        """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['nama'] = cur.fetchone()[0]
+    cur.execute(
+        """select alamat_lengkap from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['alamat'] = cur.fetchone()[0]
+    cur.execute(
+        """select saldo from sion.DONATUR where sion.DONATUR.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['saldo'] = cur.fetchone()[0]
+
+
+#created by Bram
+def getInformationSponsor(requestEmail):
+    cur.execute(
+        """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['nama'] = cur.fetchone()[0]
+    cur.execute(
+        """select alamat_lengkap from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['alamat'] = cur.fetchone()[0]
+    #cur.execute(
+    #    """select saldo from sion.SPONSOR where sion.SPONSOR.email = {}""".format(
+    #        "'" + requestEmail + "'"))
+    #session['saldo'] = cur.fetchone()[0]
+    cur.execute(
+        """select logo_sponsor from sion.SPONSOR where sion.SPONSOR.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['logo'] = cur.fetchone()[0]
+
+#created by Bram
+def getInformationPengurus(requestEmail):
+    cur.execute(
+        """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['nama'] = cur.fetchone()[0]
+    cur.execute(
+        """select alamat_lengkap from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['alamat'] = cur.fetchone()[0]
+    cur.execute(
+        """select nama from sion.organisasi, sion.pengurus_organisasi where sion.pengurus_organisasi.organisasi = sion.organisasi.email_organisasi and sion.pengurus_organisasi.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['organisasi'] = cur.fetchone()[0]
+
+#created by Bram
+@app.route('/profile')
+def profile():
+    if session.get('logged_in'):
+        role = session['role']
+        if role == "relawan":
+            getInformationRelawan(session['email'])
+            return render_template('profile-relawan.html', alamat=session['alamat'],
+                                    nama=session['nama'], email=session['email'],
+                                    tanggal_lahir=session['tanggal_lahir'],
+                                    no_hp=session['no_hp'], keahlian=session['keahlian'])
+        elif role == "donatur":
+            getInformationDonatur(session['email'])
+            return render_template('profile-donatur.html', nama=session['nama'],
+                                    email=session['email'], alamat=session['alamat'],
+                                    saldo=session['saldo'])
+        elif role == "sponsor":
+            getInformationSponsor(session['email'])
+            return render_template('profile-sponsor.html', nama=session['nama'],
+                                    email=session['email'], alamat=session['alamat'], #saldo=session['saldo'],
+                                    logo=session['logo'])
+        elif role == "pengurus organisasi":
+            getInformationPengurus(session['email'])
+            return render_template('profile-pengurus.html', nama=session['nama'],
+                                    email=session['email'], alamat=session['alamat'],
+                                    organisasi=session['organisasi'])
+    else:
+        return loginPage(wrongPassword=False, notExist=False)
 
 # register page controller by Arga G. A.
 # provide register choices
@@ -339,6 +439,61 @@ def isPenggunaExists(email):
     else:
         return False
 
+def isOrganisasiExists(email):
+    cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
+    organization = cur.fetchone()
+    if organization:
+        return True
+    else:
+        return False
+
+#created by Bram
+@app.route('/register-organisasi', defaults={'exist': False})
+def registerOrganisasiPage(exist):
+    return render_template('register-organisasi.html', exist=exist)
+
+#created by Bram
+@app.route('/register-organisasi', methods=['POST'])
+def registerOrganisasi():
+    nama_organisasi = request.form["nama-organisasi"]
+    email_organisasi = request.form["email-organisasi"]
+    nama_pengurus = request.form["nama-pengurus"]
+    email_pengurus = request.form["email-pengurus"]
+    website = request.form["website"]
+
+    if (not isPenggunaExists(email_pengurus)) and (not isOrganisasiExists(email_organisasi)):
+        kecamatan = request.form["kecamatan"]
+        kabupaten = request.form["kabupaten"]
+        provinsi = request.form["provinsi"]
+        kodepos = request.form["kode-pos"]
+        jalan = request.form["jalan"]
+
+        # print(nama + " " + email + " " + password)
+        # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
+
+        cur.execute(
+            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, aktif)""".format(
+                "'" + email_organisasi + "'",
+                "'" + website + "'",
+                "'" + nama_organisasi + "'",
+                "'" + provinsi + "'",
+                "'" + kabupaten + "'",
+                "'" + kecamatan + "'",
+                "'" + jalan + "'",
+                "'" + kodepos + "'",
+                ))
+        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
+
+        session['email'] = email
+        session['name'] = nama
+        session['role'] = 'donatur'
+        session['donatur'] = True
+        session['logged_in'] = True
+
+        print("Organisasi berhasil dimasukkan!")
+        return dashboard(recentlyRegistered=True)
+    else:
+        return registerOrganisasiPage(exist=True)
 
 # templating
 # read
