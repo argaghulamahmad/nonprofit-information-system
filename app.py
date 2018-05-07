@@ -459,6 +459,7 @@ def registerOrganisasi():
     email_organisasi = request.form["email-organisasi"]
     nama_pengurus = request.form["nama-pengurus"]
     email_pengurus = request.form["email-pengurus"]
+    website = request.form["website"]
 
     if (not isPenggunaExists(email_pengurus)) and (not isOrganisasiExists(email_organisasi)):
         kecamatan = request.form["kecamatan"]
@@ -467,17 +468,20 @@ def registerOrganisasi():
         kodepos = request.form["kode-pos"]
         jalan = request.form["jalan"]
 
-        alamat_lengkap = jalan + ", " + kecamatan + ", " + kabupaten + ", " + provinsi + ", " + kodepos
-
         # print(nama + " " + email + " " + password)
         # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
 
         cur.execute(
-            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
-                "'" + email + "'",
-                "'" + password + "'",
-                "'" + nama + "'",
-                "'" + alamat_lengkap + "'"))
+            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, aktif)""".format(
+                "'" + email_organisasi + "'",
+                "'" + website + "'",
+                "'" + nama_organisasi + "'",
+                "'" + provinsi + "'",
+                "'" + kabupaten + "'",
+                "'" + kecamatan + "'",
+                "'" + jalan + "'",
+                "'" + kodepos + "'",
+                ))
         cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
 
         session['email'] = email
