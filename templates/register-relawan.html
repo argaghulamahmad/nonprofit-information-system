@@ -21,7 +21,7 @@
                   crossorigin="anonymous">
 
             <!-- Custom styles for this template -->
-            <link href="/static/form-validation.css" rel="stylesheet">
+            <link href="{{ url_for('static', filename='css/form-validation.css')|autoversion }}" rel="stylesheet">
         </head>
 
         <body class="bg-light">
