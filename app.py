@@ -329,7 +329,7 @@ def registerRelawan():
                                                                                                     "'" + nomorHandphone + "'",
                                                                                                     "'" + birthdate + "'"))
 
-        listSkills = skills.split(",")
+        listSkills = skills.split(", ")
         for skill in listSkills:
             cur.execute(
                 """INSERT INTO SION.KEAHLIAN_RELAWAN (email, keahlian) VALUES ({}, {})""".format("'" + email + "'",
