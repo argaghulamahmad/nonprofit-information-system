@@ -247,5 +247,4 @@ def donate_organization_form():
 # main method to run the web server
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
-    app.debug = True    
     app.run()
