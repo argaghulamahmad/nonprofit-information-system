@@ -17,7 +17,7 @@
                   crossorigin="anonymous">
 
             <!-- Custom styles for this template -->
-            <link href="/static/dashboard.css" rel="stylesheet">
+            <link href="{{ url_for('static', filename='css/dashboard.css')|autoversion }}" rel="stylesheet">
         </head>
 
         <body>
@@ -77,11 +77,11 @@
                 {% if session['relawan'] or session['donatur'] or session['sponsor'] %}
                     <div class="card mb-4 box-shadow">
                         <div class="card-header">
-                            <h4 class="my-0 font-weight-normal">Berdonasi ke Organisasi</h4>
+                            <h4 class="my-0 font-weight-normal">Donasi ke Organisasi</h4>
                         </div>
                         <div class="card-body">
-                            <p>Berdonasi ke organisasi yang terdaftar dalam database SION.</p>
-                            <button type="button" class="btn btn-lg btn-block btn-primary">Berdonasi ke organisasi
+                            <p>Donasi ke organisasi yang terdaftar dalam database SION.</p>
+                            <button type="button" class="btn btn-lg btn-block btn-primary">Donasi ke organisasi
                             </button>
                         </div>
                     </div>
@@ -91,11 +91,11 @@
                 {% if session['relawan'] or session['donatur'] %}
                     <div class="card mb-4 box-shadow">
                         <div class="card-header">
-                            <h4 class="my-0 font-weight-normal">Berdonasi ke Kegiatan</h4>
+                            <h4 class="my-0 font-weight-normal">Donasi ke Kegiatan</h4>
                         </div>
                         <div class="card-body">
-                            <p>Berdonasi ke kegiatan yang terdaftar dalam database SION.</p>
-                            <button type="button" class="btn btn-lg btn-block btn-primary">Berdonasi ke kegiatan
+                            <p>Donasi ke kegiatan yang terdaftar dalam database SION.</p>
+                            <button type="button" class="btn btn-lg btn-block btn-primary">Donasi ke kegiatan
                             </button>
                         </div>
                     </div>
