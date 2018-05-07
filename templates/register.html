@@ -19,13 +19,13 @@
                   crossorigin="anonymous">
 
             <!-- Custom styles for this template -->
-            <link href="/static/dashboard.css" rel="stylesheet">
+            <link href="{{ url_for('static', filename='css/dashboard.css')|autoversion }}" rel="stylesheet">
         </head>
 
         <body>
 
         <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <h5 class="my-0 mr-md-auto font-weight-normal">SION</h5>
+            <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/">SION</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
                 <a class="p-2 text-dark" href="/">Home</a>
             </nav>
@@ -47,6 +47,7 @@
                             lahir, nomor
                             handphone, keahlian relawan yang bisa jadi lebih dari satu, dan harus mencantumkan nama
                             organisasinya. Setiap relawan dapat bergabung di satu atau lebih organisasi.</p>
+                        <br><br>
                         <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterRelawan()">
                             Daftar
                             sebagai Relawan
@@ -63,6 +64,7 @@
                             organisasi dengan mencatat tanggal dan nominal donasi. Namun, para donatur juga dapat
                             langsung
                             berdonasi ke organisasi dengan memilih donasi rutin jika diinginkan.</p>
+                        <br><br>
                         <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterDonatur()">
                             Daftar
                             sebagai Donatur
@@ -75,15 +77,25 @@
                     </div>
                     <div class="card-body">
                         <p>Sponsor tidak akan pernah menjadi relawan dan setiap sponsor hanya dapat berdonasi ke
-                            organisasi.
-                            Nominal dana yang didonasikan minimal Rp2.000.000 dan nama atau logo sponsor akan dimasukkan
-                            ke
-                            dalam halaman organisasi yang mendapatkan dana dari sponsor tersebut. Tanggal donasi juga
-                            dicatat di
-                            dalam sistem.</p>
+                            organisasi. Nominal dana yang didonasikan minimal Rp2.000.000 dan nama atau logo sponsor
+                            akan dimasukkan ke dalam halaman organisasi yang mendapatkan dana dari sponsor tersebut.
+                        </p>
                         <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterSponsor()">
                             Daftar
                             sebagai Sponsor
+                        </button>
+                    </div>
+                </div>
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Organisasi</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Untuk mendaftar, setiap organisasi harus memiliki nama organisasi, website, e-mail, alamat lengkap, dan tujuan organisasi yang bisa jadi lebih dari satu. Definisi alamat lengkap adalah memiliki jalan/desa/kelurahan/no rumah, kecamatan, kabupaten, provinsi, dan kode pos.</p>
+                        <p>Setiap organisasi harus mendaftarkan pengurusnya dengan mencantumkan nama, e-mail dan alamat lengkapnya.</p>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToRegisterOrganisasi()">
+                            Daftar
+                            sebagai Organisasi
                         </button>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 <!--Created by Arga G. A.-->
-<!--html template for register sponsor page-->
+<!--html template for register relawan page-->
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
@@ -13,7 +13,7 @@
             <meta name="author" content="">
             {#<link rel="icon" href="../../../../favicon.ico">#}
 
-            <title>Register Sponsor - SION</title>
+            <title>Register Organisasi - SION</title>
 
             <!-- Bootstrap core CSS -->
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
@@ -21,10 +21,17 @@
                   crossorigin="anonymous">
 
             <!-- Custom styles for this template -->
-            <link href="{{ url_for('static', filename='css/form-validation.css')|autoversion }}" rel="stylesheet">
+            <link href="/static/form-validation.css" rel="stylesheet">
         </head>
 
         <body class="bg-light">
+          <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+              <h5 class="my-0 mr-md-auto font-weight-normal">SION</h5>
+              <nav class="my-2 my-md-0 mr-md-3">
+                  <a class="p-2 text-dark" href="/register">Register</a>
+                  <a class="p-2 text-dark" href="/">Home</a>
+              </nav>
+          </div>
         <!-- Modal -->
         <div class="modal fade" id="user-exist" role="dialog">
             <div class="modal-dialog">
@@ -33,7 +40,7 @@
                 <div class="modal-content">
                     <div class="modal-header bg-warning">
                         {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
-                        <h4 class="modal-title" style="padding-left: auto; padding-right: auto">Pendaftaran sponsor tidak
+                        <h4 class="modal-title" style="padding-left: auto; padding-right: auto">Login tidak
                             berhasil!</h4>
                     </div>
                     <div class="modal-body">
@@ -52,39 +59,42 @@
             <div class="py-5 text-center">
                 <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt=""
                      width="72" height="72">
-                <h2>Register Sponsor</h2>
+                <h2>Register Organisasi</h2>
                 {#<p class="lead"></p>#}
             </div>
 
             <div class="row">
                 <div class="col-md-8 order-md-1">
-                    <h4 class="mb-3">Form Pendaftaran Sponsor</h4>
-                    <form class="needs-validation" novalidate action="/register-sponsor" method="POST">
+                    <h4 class="mb-3">Form Pendaftaran Organisasi</h4>
+                    <form class="needs-validation" novalidate action="/register-relawan" method="POST">
                         <div class="mb-3">
-                            <label for="name">Nama</label>
-                            <input name="nama" type="text" class="form-control" id="name" placeholder="" value=""
+                            <label for="name">Nama Organisasi</label>
+                            <input name="nama-organisasi" type="text" class="form-control" id="name" placeholder="" value=""
                                    required>
                             <div class="invalid-feedback">
-                                Valid sponsor name is required.
+                                Valid organization name is required.
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="email">Email</label>
-                            <input name="email" type="email" class="form-control" id="email"
+                            <label for="logo-picture">Website</label>
+                            <div class="form-group row">
+                                <div class="col-10">
+                                    <input name="website" class="form-control" type="url" value=""
+                                           id="url-input" placeholder="https://sion.com/" required>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan website organisasi anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email Organisasi</label>
+                            <input name="email-organisasi" type="email" class="form-control" id="email"
                                    placeholder="you@example.com" required>
                             <div class="invalid-feedback">
-                                Valid email is required.
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password">Password</label>
-                            <input name="password" type="password" class="form-control" id="password"
-                                   placeholder="Password" data-toggle="popover" title="Password Info" data-content=""
-                                   required>
-                            <div class="invalid-feedback">
-                                Valid password is required.
+                                Valid organization email is required.
                             </div>
                         </div>
 
@@ -93,7 +103,7 @@
                             <input name="kecamatan" type="text" class="form-control" id="kecamatan" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kecamatan alamat anda.
+                                Silahkan masukkan kecamatan alamat organisasi anda.
                             </div>
                         </div>
 
@@ -102,7 +112,7 @@
                             <input name="kabupaten" type="text" class="form-control" id="kabupaten" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kabupaten alamat anda.
+                                Silahkan masukkan kabupaten alamat organisasi anda.
                             </div>
                         </div>
 
@@ -111,7 +121,7 @@
                             <input name="provinsi" type="text" class="form-control" id="provinsi" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan provinsi alamat anda.
+                                Silahkan masukkan provinsi alamat organisasi anda.
                             </div>
                         </div>
 
@@ -120,7 +130,7 @@
                             <input name="kode-pos" type="text" class="form-control" id="kode-pos" placeholder=""
                                    required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan kode pos alamat anda.
+                                Silahkan masukkan kode pos alamat organisasi anda.
                             </div>
                         </div>
 
@@ -128,22 +138,46 @@
                             <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
                             <input name="jalan" type="text" class="form-control" id="jalan" placeholder="" required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan jalan alamat anda.
+                                Silahkan masukkan jalan alamat organisasi anda.
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="logo-picture">Logo Sponsor</label>
-                            <div class="form-group row">
-                                <div class="col-10">
-                                    <input name="logo" class="form-control" type="url" value=""
-                                           id="url-input" placeholder="https://img.com/sion" required>
-                                </div>
-                            </div>
+                            <label for="name">Tujuan Organisasi</label>
+                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                                   required>
                             <div class="invalid-feedback">
-                                Silahkan masukkan alamat logo sponsor anda.
+                                Silahkan masukkan tujuan organisasi anda.
                             </div>
                         </div>
+
+
+                        <div class="mb-3">
+                            <label for="name">Nama Pengurus</label>
+                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                                   required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan nama pengurus organisasi anda.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email Pengurus</label>
+                            <input name="email-pengurus" type="email" class="form-control" id="email"
+                                   placeholder="you@example.com" required>
+                            <div class="invalid-feedback">
+                                Valid email is required.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Alamat Pengurus</label>
+                            <input name="alamat-pengurus" type="text" class="form-control" id="jalan" placeholder="" required>
+                            <div class="invalid-feedback">
+                                Silahkan masukkan alamat pengurus oragnisasi anda.
+                            </div>
+                        </div>
+
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
                     </form>
                 </div>
@@ -192,23 +226,6 @@
                     });
                 }, false);
             })();
-
-            $(document).ready(function () {
-                $('input[type=password]').keyup(function () {
-                    var pswd = $(this).val();
-                    console.log(pswd);
-                    //validate letter
-                    if (pswd.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
-                    )) {
-                        $('input[type=password]').attr('data-content', 'Valid Password').removeClass('bg-danger').removeClass('text-white').popover('show');
-                        console.log('valid');
-                    } else {
-                        $('input[type=password]').attr('data-content', 'Invalid Password: Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
-                        ).addClass('bg-danger').addClass('text-white').popover('show');
-                        console.log('invalid');
-                    }
-                })
-            });
 
             {% if exist %}
                 $('#user-exist').modal({show: true});
