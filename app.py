@@ -15,9 +15,9 @@ from flask import Flask, render_template, session, request
 
 # connect to local database
 # change this variables according your local database
-dbname = 'bramsedana'  # database name
-username = 'postgres'  # username
-password = 'postgres'  # password
+dbname = 'db081'  # database name
+username = 'db081'  # username
+password = 'saiT8Noo'  # password
 
 conn_string = "host='localhost' dbname=%s user=%s password=%s " % (dbname, username, password)
 conn = psycopg2.connect(conn_string)
