@@ -41,7 +41,7 @@ def home():
 # dashboard controller by Arga G. A.
 # provide dashboard page
 @app.route('/dashboard', defaults={'recentlyRegistered': False})
-def dashboard(recentlyRegistered):
+def dashboard(recentlyRegistered=False):
     if session.get('logged_in'):
         return render_template('dashboard.html', userName=session['name'], userRole=session['role'],
                                recentlyRegistered=recentlyRegistered)
@@ -439,104 +439,144 @@ def isPenggunaExists(email):
     else:
         return False
 
-# users controller by Aldi Hilman Ramadhani
-# this is template controller
-# retrieve all users email
+# created by Aldi Hilman R
+# view organization list
+# querry all organization
 @app.route('/organization')
 def view_organization_list():
-    cur.execute("""select email_organisasi, website, nama, status_verifikasi from sion.organisasi""")
-    rows = cur.fetchall()
-    organizations = []
-    for row in rows:
-        
-        organization = {
-            'email' : row[0],
-            'website' : row[1],
-            'nama' : row[2],
-            'status_verifikasi' : row[3],
-        }
-        
-        organizations.append(organization)
+    try:
+        cur.execute("""select email_organisasi, website, nama, status_verifikasi from sion.organisasi""")
+        rows = cur.fetchall()
+        organizations = []
+        for row in rows:
+            
+            organization = {
+                'email' : row[0],
+                'website' : row[1],
+                'nama' : row[2],
+                'status_verifikasi' : row[3],
+            }
+            
+            organizations.append(organization)
 
-    return render_template(
-        'organization_list.html',
-        userName=session['name'],
-        userRole=session['role'],
-        organizations=organizations
-    )
+        return render_template(
+            'organization_list.html',
+            userName=session['name'],
+            userRole=session['role'],
+            organizations=organizations
+        )
 
+    except Exception as e:
+        return dashboard()
+
+# created by Aldi Hilman R
+# view organization detail
+# querry organization specification
 @app.route('/organization/<email>')
 def view_organization_profle(email):
-    organization_email = email
-    
-    rows = cur.execute(
-            """select * 
-            from sion.organisasi 
-            where email_organisasi={}""".format(
-            "'" + organization_email + "'"))
-    biodata_organisasi = cur.fetchone()
+    try:
+        organization_email = email
+        
+        rows = cur.execute(
+                """select * 
+                from sion.organisasi 
+                where email_organisasi={}""".format(
+                "'" + organization_email + "'"))
+        biodata_organisasi = cur.fetchone()
 
-    rows = cur.execute(
-            """select U.email, U.nama, U.alamat_lengkap
-            from sion.pengguna U, sion.pengurus_organisasi P, sion.organisasi O
-            where O.email_organisasi={}
-            and P.organisasi=O.email_organisasi
-            and U.email=P.email""".format(
-            "'" + organization_email + "'"))
-    pengurus_organisasi = cur.fetchall()
+        rows = cur.execute(
+                """select U.email, U.nama, U.alamat_lengkap
+                from sion.pengguna U, sion.pengurus_organisasi P, sion.organisasi O
+                where O.email_organisasi={}
+                and P.organisasi=O.email_organisasi
+                and U.email=P.email""".format(
+                "'" + organization_email + "'"))
+        pengurus_organisasi = cur.fetchall()
 
-    rows = cur.execute(
-            """select *
-            from sion.donatur_organisasi
-            where organisasi={}""".format(
-            "'" + organization_email + "'"))
-    donasi_donatur = cur.fetchall()
+        rows = cur.execute(
+                """select *
+                from sion.donatur_organisasi
+                where organisasi={}""".format(
+                "'" + organization_email + "'"))
+        donasi_donatur = cur.fetchall()
 
-    rows = cur.execute(
-            """select *
-            from sion.sponsor_organisasi
-            where organisasi={}""".format(
-            "'" + organization_email + "'"))
-    donasi_sponsor = cur.fetchall()
+        rows = cur.execute(
+                """select *
+                from sion.sponsor_organisasi
+                where organisasi={}""".format(
+                "'" + organization_email + "'"))
+        donasi_sponsor = cur.fetchall()
 
-    rows = cur.execute(
-            """select sum(S.nominal)+sum(D.nominal)
-            from sion.sponsor_organisasi S,
-            sion.donatur_organisasi D
-            where S.organisasi={}
-            and D.organisasi={}""".format(
-            "'" + organization_email + "'",
-            "'" + organization_email + "'"))
-    total_donasi = cur.fetchone()
+        rows = cur.execute(
+                """select sum(D.nominal)
+                from sion.donatur_organisasi D
+                where D.organisasi={}""".format(
+                "'" + organization_email + "'",
+                "'" + organization_email + "'"))
 
-    return render_template(
-        'organization_profile.html',
-        userName=session['name'],
-        userRole=session['role'],
-        biodata_organisasi=biodata_organisasi,
-        pengurus_organisasi=pengurus_organisasi,
-        donasi_donatur=donasi_donatur,
-        donasi_sponsor=donasi_sponsor,
-        total_donasi=total_donasi
-    )
+        jumlah_donasi_donatur = cur.fetchone()[0]
+        if (jumlah_donasi_donatur == 'None'):
+            jumlah_donasi_donatur = 0
+        print(jumlah_donasi_donatur)
 
-@app.route('/donate/organization') 
+        rows = cur.execute(
+                """select sum(S.nominal)
+                from sion.sponsor_organisasi S
+                where S.organisasi={}""".format(
+                "'" + organization_email + "'",
+                "'" + organization_email + "'"))
+
+        jumlah_donasi_sponsor = cur.fetchone()[0]
+        if (jumlah_donasi_sponsor == 'None'):
+            jumlah_donasi_sponsor = 0
+        print(jumlah_donasi_sponsor)
+
+        total_donasi = jumlah_donasi_sponsor + jumlah_donasi_donatur
+
+        return render_template(
+            'organization_profile.html',
+            userName=session['name'],
+            userRole=session['role'],
+            biodata_organisasi=biodata_organisasi,
+            pengurus_organisasi=pengurus_organisasi,
+            donasi_donatur=donasi_donatur,
+            donasi_sponsor=donasi_sponsor,
+            total_donasi=total_donasi
+        )
+    except Exception as e:
+        print(str(e))
+        return dashboard()
+
+@app.route('/donate/organization')
 def view_donate_organization():
-    rows = cur.execute(
-            """select nama
-            from sion.organisasi""")
-    organizations = cur.fetchall()
-    
-    return render_template(
-        'donate_organization.html',
-        userName=session['name'],
-        userRole=session['role'],
-        organizations=organizations
-    )
+    try:
+        print(session['role'])
+        if session['role'] != 'donatur' and session['role'] != 'sponsor':
+            raise Exception('User Not Authorize to do This Task.')
 
-@app.route('/donate/organization', methods=['POST']) 
+        rows = cur.execute(
+                """select nama
+                from sion.organisasi""")
+        organizations = cur.fetchall()
+        
+        return render_template(
+            'donate_organization.html',
+            userName=session['name'],
+            userRole=session['role'],
+            organizations=organizations
+        )
+    except Exception as e:
+        return dashboard()
+
+@app.route('/donate/organization', methods=['POST'])
 def donate_organization_form():
-    pass
+    try:
+        if session['role'] == 'donatur' or session['role'] == 'sponsor':
+            raise Exception('User Not Authorize to do This Task.')
+            
+    except Exception as e:
+        return dashboard()
+
 def isOrganisasiExists(email):
     cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
     organization = cur.fetchone()
