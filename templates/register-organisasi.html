@@ -1,5 +1,3 @@
-<!--Created by Arga G. A.-->
-<!--html template for register relawan page-->
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
@@ -66,7 +64,7 @@
             <div class="row">
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Form Pendaftaran Organisasi</h4>
-                    <form class="needs-validation" novalidate action="/register-relawan" method="POST">
+                    <form class="needs-validation" novalidate action="/register-organisasi" method="POST">
                         <div class="mb-3">
                             <label for="name">Nama Organisasi</label>
                             <input name="nama-organisasi" type="text" class="form-control" id="name" placeholder="" value=""
@@ -144,7 +142,7 @@
 
                         <div class="mb-3">
                             <label for="name">Tujuan Organisasi</label>
-                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                            <input name="tujuan" type="text" class="form-control" id="name" placeholder="tujuan A, tujuan B,..." value=""
                                    required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan tujuan organisasi anda.

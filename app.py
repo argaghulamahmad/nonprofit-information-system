@@ -1,5 +1,6 @@
 import os
-
+import string
+from random import *
 import psycopg2
 from flask import Flask, render_template, session, request
 
@@ -233,6 +234,10 @@ def getInformationPengurus(requestEmail):
             "'" + requestEmail + "'"))
     session['alamat'] = cur.fetchone()[0]
     cur.execute(
+        """select password from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['password'] = cur.fetchone()[0]
+    cur.execute(
         """select nama from sion.organisasi, sion.pengurus_organisasi where sion.pengurus_organisasi.organisasi = sion.organisasi.email_organisasi and sion.pengurus_organisasi.email = {}""".format(
             "'" + requestEmail + "'"))
     session['organisasi'] = cur.fetchone()[0]
@@ -262,7 +267,7 @@ def profile():
             getInformationPengurus(session['email'])
             return render_template('profile-pengurus.html', nama=session['nama'],
                                     email=session['email'], alamat=session['alamat'],
-                                    organisasi=session['organisasi'])
+                                    organisasi=session['organisasi'], password=session['password'])
     else:
         return loginPage(wrongPassword=False, notExist=False)
 
@@ -467,12 +472,13 @@ def registerOrganisasi():
         provinsi = request.form["provinsi"]
         kodepos = request.form["kode-pos"]
         jalan = request.form["jalan"]
+        alamat_pengurus = request.form["alamat-pengurus"]
 
         # print(nama + " " + email + " " + password)
         # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
 
         cur.execute(
-            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, aktif)""".format(
+            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, 'aktif')""".format(
                 "'" + email_organisasi + "'",
                 "'" + website + "'",
                 "'" + nama_organisasi + "'",
@@ -482,13 +488,42 @@ def registerOrganisasi():
                 "'" + jalan + "'",
                 "'" + kodepos + "'",
                 ))
-        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
 
-        session['email'] = email
-        session['name'] = nama
-        session['role'] = 'donatur'
-        session['donatur'] = True
+        allchar = string.ascii_letters + string.punctuation + string.digits
+        pass_pengurus = "".join(choice(allchar) for x in range(10))
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email_pengurus + "'",
+                "'" + pass_pengurus + "'",
+                "'" + nama_pengurus + "'",
+                "'" + alamat_pengurus + "'",
+                ))
+
+        cur.execute(
+            """INSERT INTO SION.PENGURUS_ORGANISASI (email, organisasi) VALUES ({}, {})""".format(
+                "'" + email_pengurus + "'",
+                "'" + email_organisasi + "'",
+                ))
+
+        no_registrasi = "".join(choice(string.digits) for x in range(12))
+        cur.execute(
+            """INSERT INTO SION.ORGANISASI_TERVERIFIKASI (email_organisasi, nomor_registrasi, status_aktif) VALUES ({}, {}, 'aktif')""".format(
+                "'" + email_organisasi + "'",
+                "'" + no_registrasi + "'",
+                ))
+
+        listTujuan = request.form["tujuan"].split(", ")
+        for tujuan in listTujuan:
+            cur.execute(
+                """INSERT INTO SION.TUJUAN_ORGANISASI (organisasi, tujuan) VALUES ({}, {})""".format("'" + email_organisasi + "'",
+                                                                                                 "'" + tujuan + "'"))
+
+        session['email'] = email_pengurus
+        session['name'] = nama_pengurus
+        session['role'] = 'pengurus organisasi'
+        session['pengurus organisasi'] = True
         session['logged_in'] = True
+        session['password'] = pass_pengurus
 
         print("Organisasi berhasil dimasukkan!")
         return dashboard(recentlyRegistered=True)
