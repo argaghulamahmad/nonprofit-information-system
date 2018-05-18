@@ -127,7 +127,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="address">Kode pos</label>
+                            <label for="address">Kode Pos</label>
                             <input name="kode-pos" type="text" class="form-control" id="kode-pos" placeholder=""
                                    required>
                             <div class="invalid-feedback">
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="address">Jalan/Desa/Kelurahan/No. Rumah</label>
+                            <label for="address">Jalan/Desa/Kelurahan/No.Rumah</label>
                             <input name="jalan" type="text" class="form-control" id="jalan" placeholder="" required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan jalan alamat anda.
@@ -161,6 +161,7 @@
                                 <label for="nomor-handphone"></label><input name="nomor-handphone" class="form-control"
                                                                             type="tel" value=""
                                                                             id="nomor-handphone" placeholder=""
+                                                                            data-toggle="popover" title="Phone Number Info" data-content=""
                                                                             required>
                             </div>
                             <div class="invalid-feedback">
@@ -169,7 +170,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="skill">Keahlian yang anda dimiliki</label>
+                            <label for="skill">Keahlian yang Dimiliki</label>
                             <textarea name="skills" class="form-control" rows="5" id="skills"
                                       placeholder="Programming, Gaming" required></textarea>
                             <div class="invalid-feedback">
@@ -237,6 +238,21 @@
                         console.log('valid');
                     } else {
                         $('input[type=password]').attr('data-content', 'Invalid Password: Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+                        ).addClass('bg-danger').addClass('text-white').popover('show');
+                        console.log('invalid');
+                    }
+                });
+
+                $('input[type=tel]').keyup(function () {
+                    var phoneNumber = $(this).val();
+                    console.log(phoneNumber);
+                    //validate letter
+                    if (phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+                    )) {
+                        $('input[type=tel]').attr('data-content', 'Valid Phone Number').removeClass('bg-danger').removeClass('text-white').popover('show');
+                        console.log('valid');
+                    } else {
+                        $('input[type=tel]').attr('data-content', 'Invalid Phone Number'
                         ).addClass('bg-danger').addClass('text-white').popover('show');
                         console.log('invalid');
                     }
