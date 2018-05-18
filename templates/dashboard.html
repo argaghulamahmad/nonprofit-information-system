@@ -119,11 +119,6 @@
                             <button type="button" class="btn btn-lg btn-block btn-primary">Lihat kegiatan</button>
                         </div>
                     </div>
-                    <footer class="mastfoot mt-auto">
-                        <div class="inner">
-                            <p>SION © 2018</p>
-                        </div>
-                    </footer>
                 {% endif %}
             </div>
             <footer class="my-5 pt-5 text-muted text-center text-small">
@@ -167,5 +162,8 @@
         </body>
     {% else %}
         <p>You're not logged in already!</p>
+        <script>
+            window.open("/login", "_self");
+        </script>
     {% endif %}
 {% endblock %}
