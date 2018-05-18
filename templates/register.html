@@ -3,6 +3,9 @@
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
+        <script>
+            window.open("/", "_self");
+        </script>
     {% else %}
         <head>
             <meta charset="utf-8">

@@ -1,5 +1,6 @@
 import os
-
+import string
+from random import *
 import psycopg2
 from flask import Flask, render_template, session, request
 
@@ -119,6 +120,7 @@ def getUsersEmail():
         print(str(e))
         return "Ada kesalahan pada sistem."
 
+
 # get user role controller by Arga G. A.
 # determine role of user by using email
 # retrieve user role
@@ -164,7 +166,8 @@ def getUserRole(requestEmail):
         print(str(e))
         return "Ada kesalahan pada sistem."
 
-#created by Bram
+
+# created by Bram
 def getInformationRelawan(requestEmail):
     cur.execute(
         """select keahlian from sion.KEAHLIAN_RELAWAN where sion.KEAHLIAN_RELAWAN.email = {}""".format(
@@ -187,7 +190,8 @@ def getInformationRelawan(requestEmail):
             "'" + requestEmail + "'"))
     session['no_hp'] = cur.fetchone()[0]
 
-#created by Bram
+
+# created by Bram
 def getInformationDonatur(requestEmail):
     cur.execute(
         """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
@@ -203,7 +207,7 @@ def getInformationDonatur(requestEmail):
     session['saldo'] = cur.fetchone()[0]
 
 
-#created by Bram
+# created by Bram
 def getInformationSponsor(requestEmail):
     cur.execute(
         """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
@@ -213,16 +217,17 @@ def getInformationSponsor(requestEmail):
         """select alamat_lengkap from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
             "'" + requestEmail + "'"))
     session['alamat'] = cur.fetchone()[0]
-    #cur.execute(
+    # cur.execute(
     #    """select saldo from sion.SPONSOR where sion.SPONSOR.email = {}""".format(
     #        "'" + requestEmail + "'"))
-    #session['saldo'] = cur.fetchone()[0]
+    # session['saldo'] = cur.fetchone()[0]
     cur.execute(
         """select logo_sponsor from sion.SPONSOR where sion.SPONSOR.email = {}""".format(
             "'" + requestEmail + "'"))
     session['logo'] = cur.fetchone()[0]
 
-#created by Bram
+
+# created by Bram
 def getInformationPengurus(requestEmail):
     cur.execute(
         """select nama from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
@@ -233,11 +238,16 @@ def getInformationPengurus(requestEmail):
             "'" + requestEmail + "'"))
     session['alamat'] = cur.fetchone()[0]
     cur.execute(
+        """select password from sion.PENGGUNA where sion.PENGGUNA.email = {}""".format(
+            "'" + requestEmail + "'"))
+    session['password'] = cur.fetchone()[0]
+    cur.execute(
         """select nama from sion.organisasi, sion.pengurus_organisasi where sion.pengurus_organisasi.organisasi = sion.organisasi.email_organisasi and sion.pengurus_organisasi.email = {}""".format(
             "'" + requestEmail + "'"))
     session['organisasi'] = cur.fetchone()[0]
 
-#created by Bram
+
+# created by Bram
 @app.route('/profile')
 def profile():
     if session.get('logged_in'):
@@ -245,26 +255,27 @@ def profile():
         if role == "relawan":
             getInformationRelawan(session['email'])
             return render_template('profile-relawan.html', alamat=session['alamat'],
-                                    nama=session['nama'], email=session['email'],
-                                    tanggal_lahir=session['tanggal_lahir'],
-                                    no_hp=session['no_hp'], keahlian=session['keahlian'])
+                                   nama=session['nama'], email=session['email'],
+                                   tanggal_lahir=session['tanggal_lahir'],
+                                   no_hp=session['no_hp'], keahlian=session['keahlian'])
         elif role == "donatur":
             getInformationDonatur(session['email'])
             return render_template('profile-donatur.html', nama=session['nama'],
-                                    email=session['email'], alamat=session['alamat'],
-                                    saldo=session['saldo'])
+                                   email=session['email'], alamat=session['alamat'],
+                                   saldo=session['saldo'])
         elif role == "sponsor":
             getInformationSponsor(session['email'])
             return render_template('profile-sponsor.html', nama=session['nama'],
-                                    email=session['email'], alamat=session['alamat'], #saldo=session['saldo'],
-                                    logo=session['logo'])
+                                   email=session['email'], alamat=session['alamat'],  # saldo=session['saldo'],
+                                   logo=session['logo'])
         elif role == "pengurus organisasi":
             getInformationPengurus(session['email'])
             return render_template('profile-pengurus.html', nama=session['nama'],
-                                    email=session['email'], alamat=session['alamat'],
-                                    organisasi=session['organisasi'])
+                                   email=session['email'], alamat=session['alamat'],
+                                   organisasi=session['organisasi'], password=session['password'])
     else:
         return loginPage(wrongPassword=False, notExist=False)
+
 
 # register page controller by Arga G. A.
 # provide register choices
@@ -439,6 +450,7 @@ def isPenggunaExists(email):
     else:
         return False
 
+
 def isOrganisasiExists(email):
     cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
     organization = cur.fetchone()
@@ -447,12 +459,14 @@ def isOrganisasiExists(email):
     else:
         return False
 
-#created by Bram
+
+# created by Bram
 @app.route('/register-organisasi', defaults={'exist': False})
 def registerOrganisasiPage(exist):
     return render_template('register-organisasi.html', exist=exist)
 
-#created by Bram
+
+# created by Bram
 @app.route('/register-organisasi', methods=['POST'])
 def registerOrganisasi():
     nama_organisasi = request.form["nama-organisasi"]
@@ -467,12 +481,13 @@ def registerOrganisasi():
         provinsi = request.form["provinsi"]
         kodepos = request.form["kode-pos"]
         jalan = request.form["jalan"]
+        alamat_pengurus = request.form["alamat-pengurus"]
 
         # print(nama + " " + email + " " + password)
         # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
 
         cur.execute(
-            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, aktif)""".format(
+            """INSERT INTO SION.ORGANISASI (email_organisasi, website, nama, provinsi, kabupaten_kota, kecamatan, kelurahan, kode_pos, status_verifikasi) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, 'aktif')""".format(
                 "'" + email_organisasi + "'",
                 "'" + website + "'",
                 "'" + nama_organisasi + "'",
@@ -481,22 +496,52 @@ def registerOrganisasi():
                 "'" + kecamatan + "'",
                 "'" + jalan + "'",
                 "'" + kodepos + "'",
-                ))
-        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
+            ))
 
-        session['email'] = email
-        session['name'] = nama
-        session['role'] = 'donatur'
-        session['donatur'] = True
+        allchar = string.ascii_letters + string.punctuation + string.digits
+        pass_pengurus = "".join(choice(allchar) for x in range(10))
+        cur.execute(
+            """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
+                "'" + email_pengurus + "'",
+                "'" + pass_pengurus + "'",
+                "'" + nama_pengurus + "'",
+                "'" + alamat_pengurus + "'",
+            ))
+
+        cur.execute(
+            """INSERT INTO SION.PENGURUS_ORGANISASI (email, organisasi) VALUES ({}, {})""".format(
+                "'" + email_pengurus + "'",
+                "'" + email_organisasi + "'",
+            ))
+
+        no_registrasi = "".join(choice(string.digits) for x in range(12))
+        cur.execute(
+            """INSERT INTO SION.ORGANISASI_TERVERIFIKASI (email_organisasi, nomor_registrasi, status_aktif) VALUES ({}, {}, 'aktif')""".format(
+                "'" + email_organisasi + "'",
+                "'" + no_registrasi + "'",
+            ))
+
+        listTujuan = request.form["tujuan"].split(", ")
+        for tujuan in listTujuan:
+            cur.execute(
+                """INSERT INTO SION.TUJUAN_ORGANISASI (organisasi, tujuan) VALUES ({}, {})""".format(
+                    "'" + email_organisasi + "'",
+                    "'" + tujuan + "'"))
+
+        session['email'] = email_pengurus
+        session['name'] = nama_pengurus
+        session['role'] = 'pengurus organisasi'
+        session['pengurus organisasi'] = True
         session['logged_in'] = True
+        session['password'] = pass_pengurus
 
         print("Organisasi berhasil dimasukkan!")
         return dashboard(recentlyRegistered=True)
     else:
         return registerOrganisasiPage(exist=True)
 
-# templating
-# read
+
+# auto update template
 @app.template_filter('autoversion')
 def autoversion_filter(filename):
     # determining fullpath might be project specific
