@@ -515,9 +515,8 @@ def view_organization_profle(email):
                 "'" + organization_email + "'"))
 
         jumlah_donasi_donatur = cur.fetchone()[0]
-        if (jumlah_donasi_donatur == 'None'):
+        if (jumlah_donasi_donatur == None):
             jumlah_donasi_donatur = 0
-        print(jumlah_donasi_donatur)
 
         rows = cur.execute(
                 """select sum(S.nominal)
@@ -527,11 +526,21 @@ def view_organization_profle(email):
                 "'" + organization_email + "'"))
 
         jumlah_donasi_sponsor = cur.fetchone()[0]
-        if (jumlah_donasi_sponsor == 'None'):
+        if (jumlah_donasi_sponsor == None):
             jumlah_donasi_sponsor = 0
-        print(jumlah_donasi_sponsor)
 
         total_donasi = jumlah_donasi_sponsor + jumlah_donasi_donatur
+
+        if (jumlah_donasi_donatur == 0):
+            jumlah_donasi_donatur = None
+        if (jumlah_donasi_sponsor == 0):
+            jumlah_donasi_sponsor = None
+
+        if (total_donasi == 0):
+            total_donasi = None
+        else:
+            total_donasi = ".".join(split_money(total_donasi))
+            total_donasi = "Rp{},00".format(total_donasi)
 
         return render_template(
             'organization_profile.html',
@@ -546,6 +555,14 @@ def view_organization_profle(email):
     except Exception as e:
         print(str(e))
         return dashboard()
+
+def split_money(money):
+    ans = []
+    money = str(money)
+    while money:
+        ans = [money[-3:]] + ans
+        money = money[:-3]
+    return ans
 
 @app.route('/donate/organization')
 def view_donate_organization():
