@@ -567,8 +567,7 @@ def split_money(money):
 @app.route('/donate/organization')
 def view_donate_organization():
     try:
-        print(session['role'])
-        if session['role'] != 'donatur' and session['role'] != 'sponsor':
+        if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
             raise Exception('User Not Authorize to do This Task.')
 
         rows = cur.execute(
@@ -576,10 +575,13 @@ def view_donate_organization():
                 from sion.organisasi""")
         organizations = cur.fetchall()
         
+        isSponsor = session['role'] == 'sponsor'
+
         return render_template(
             'donate_organization.html',
             userName=session['name'],
             userRole=session['role'],
+            isSponsor=isSponsor,
             organizations=organizations
         )
     except Exception as e:
@@ -588,8 +590,9 @@ def view_donate_organization():
 @app.route('/donate/organization', methods=['POST'])
 def donate_organization_form():
     try:
-        if session['role'] == 'donatur' or session['role'] == 'sponsor':
+        if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
             raise Exception('User Not Authorize to do This Task.')
+        
             
     except Exception as e:
         return dashboard()

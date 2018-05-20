@@ -32,39 +32,48 @@
 <div class="container">
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
         <h1 class="display-4">Selamat datang, {{userName}} di Donasi ke Organisasi SION.</h1>
-        <p class="lead">Anda adalah <u>{{userRole}}</u>.</p>
+        <p class="lead">Anda adalah <u id="userRole">{{userRole}}</u>.</p>
     </div>
 </div>
 
 <div class="container">
-    <form action="/login" method="POST">
+    <form id="first-form">
         
         <label for="usr"><p class="lead">Organisasi :</p></label>
-        <select class="form-control">
+        <select class="form-control" id="organization">
             {% for organization in organizations %}
                 <option>{{organization[0]}}</option>
             {% endfor %}
         </select>
 
-        <label for="usr"><p class="lead">Jumlah Dana :</p></label>
-        <input type="number" class="form-control">
+        <label for="usr" style="margin-top:1%;"><p class="lead">Jumlah Dana :</p></label>
+        
+        {% if isSponsor %}
+            <input type="number" minlength="7" required value="2000000" min="2000000" class="form-control" id="donation-val">
+        {% else %}
+            <input type="number" minlength="1" required value="1" min="1" class="form-control" id="donation-val">
+        {% endif %}
+
+        <button type="button" class="btn btn-info btn-lg" id="first-submit-button"
+            data-toggle="modal" data-target="#myModal" style="margin-top:1%;">
+            Submit
+        </button>
     </form>
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Submit</button>
 
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
         
             <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Konfirmasi Donasi</h4>
-            </div>
-            <div class="modal-body">
-                <p>Apakah anda benar ingin berdonasi sebanyak X untuk organisasi ini?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Ya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Tidak</button>
-            </div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Konfirmasi Donasi</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmation">Apakah anda benar ingin berdonasi sebanyak X untuk organisasi ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="ya-btn" type="button" class="btn btn-primary" data-dismiss="modal">Ya</button>
+                    <button id="tdk-btn" type="button" class="btn btn-danger" data-dismiss="modal">Tidak</button>
+                </div>
             </div>
             
         </div>
@@ -99,6 +108,60 @@
         fg: '#eceeef',
         text: 'Thumbnail'
     });
+
+    $(document).ready(function(){
+        $("#first-submit-button").click(function(){
+
+            var organization = $("#organization").val();
+            var donation_val = $("#donation-val").val();
+
+            var donation_val_number = parseInt(donation_val, 10);
+            var userRole = $("#userRole").text();
+
+            if (userRole == 'sponsor') {
+                if (donation_val_number >= 2000000) {
+                    $("#confirmation").text("Apakah anda benar ingin berdonasi sebanyak Rp." 
+                        + donation_val + ",00 untuk organisasi " + organization + "?");
+                    $("#tdk-btn").text("Tidak");
+                    $("#ya-btn").show();
+                } else {
+                    $("#confirmation").text("Jumlah donasi untuk sponsor minimal Rp2.000.000,00.");
+                    $("#tdk-btn").text("ya maaf :(");
+                    $("#ya-btn").hide();                    
+                }
+            } else {
+                if (donation_val_number > 0) {
+                    $("#confirmation").text("Apakah anda benar ingin berdonasi sebanyak Rp." 
+                        + donation_val + ",00 untuk organisasi " + organization + "?");
+                    $("#tdk-btn").text("Tidak");
+                    $("#ya-btn").show();
+                } else {
+                    $("#confirmation").text("Jumlah donasi tidak boleh kosong/negatif.");
+                    $("#tdk-btn").text("ya maaf :(");
+                    $("#ya-btn").hide();
+                }
+            }
+        });
+
+        $('#first-form').submit(function(){
+            $("#first-submit-button").click();
+            return false;
+        });
+
+        $(document).keydown(function(e){
+            if ($('#myModal').attr('class') == 'modal fade show'
+                && e.keyCode == 13) { 
+                $("#ya-btn").click();
+                return false;
+            } else if ($('#myModal').attr('class') == 'modal fade show'
+                && e.keyCode == 27) { 
+                $("#tdk-btn").click();
+                return false;
+            }
+        });
+
+    });
+
 </script>
 </body>
 {% endblock %}
