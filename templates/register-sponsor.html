@@ -61,8 +61,6 @@
 
         <div class="container">
             <div class="py-5 text-center">
-                <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt=""
-                     width="72" height="72">
                 <h2>Register Sponsor</h2>
                 {#<p class="lead"></p>#}
             </div>
@@ -147,12 +145,11 @@
                             <label for="logo-picture">Logo</label>
                             <div class="form-group row">
                                 <div class="col-10">
+                                    <input type="file" id="file" class="custom-file-input" required>
+                                    <span class="custom-file-control"></span>
                                     <input name="logo" class="form-control" type="url" value=""
                                            id="url-input" placeholder="https://img.com/sion" required>
                                 </div>
-                            </div>
-                            <div class="invalid-feedback">
-                                Silahkan masukkan alamat logo sponsor anda.
                             </div>
                         </div>
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
@@ -169,11 +166,12 @@
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.js"
+                integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
                 crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script\n' +
-            '  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"\n' +
+            '  src="https://code.jquery.com/jquery-3.3.1.js"\n' +
             '  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="\n' +
             '  crossorigin="anonymous"><\/script>')</script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
@@ -221,6 +219,68 @@
                     }
                 })
             });
+
+            $("document").ready(function () {
+
+                //modified code from https://ctrlq.org/code/20526-javascript-image-uploader
+                $('input[type=file]').on("change", function () {
+
+                    var $files = $(this).get(0).files;
+
+                    if ($files.length) {
+
+                        // Reject big files
+                        if ($files[0].size > $(this).data("max-size") * 1024) {
+                            console.log("Please select a smaller file");
+                            return false;
+                        }
+
+                        // Begin file upload
+                        console.log("Uploading file to Imgur..");
+
+                        var apiUrl = 'https://api.imgur.com/3/image';
+                        var apiKey = '6341af7247054c3';
+
+                        var settings = {
+                            async: false,
+                            crossDomain: true,
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            url: apiUrl,
+                            headers: {
+                                Authorization: 'Client-ID ' + apiKey,
+                                Accept: 'application/json'
+                            },
+                            mimeType: 'multipart/form-data'
+                        };
+
+                        var formData = new FormData();
+                        formData.append("image", $files[0]);
+                        settings.data = formData;
+
+                        // Response contains stringified JSON
+                        // Image URL available at response.data.link
+                        var imgId;
+                        $.ajax(settings).done(function (response) {
+                            imgId = $.parseJSON(response).data.id;
+                            console.log(imgId);
+                        });
+
+                        $.ajax({
+                            url: "https://api.imgur.com/3/image/" + imgId, headers: {
+                                Authorization: 'Client-ID ' + apiKey,
+                                Accept: 'application/json'
+                            }, success: function (result) {
+                                imgLink = result.data.link;
+                                $("#url-input").val(imgLink);
+                                console.log(imgLink);
+                            }
+                        });
+                    }
+                });
+            });
+
 
             {% if exist %}
                 $('#user-exist').modal({show: true});
