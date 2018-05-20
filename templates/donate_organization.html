@@ -29,6 +29,9 @@
     <a class="btn btn-outline-warning" href="/logout">Log out</a>
 </div>
 
+<div class="container" id="alert">
+</div>
+
 <div class="container">
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
         <h1 class="display-4">Selamat datang, {{userName}} di Donasi ke Organisasi SION.</h1>
@@ -42,7 +45,7 @@
         <label for="usr"><p class="lead">Organisasi :</p></label>
         <select class="form-control" id="organization">
             {% for organization in organizations %}
-                <option>{{organization[0]}}</option>
+                <option id="{{organization[1]}}">{{organization[0]}}</option>
             {% endfor %}
         </select>
 
@@ -98,6 +101,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
         integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
@@ -146,6 +150,45 @@
         $('#first-form').submit(function(){
             $("#first-submit-button").click();
             return false;
+        });
+
+        $("#ya-btn").click(function(){
+
+            var organization_name = $("#organization").val();
+            var organization_email = $("#organization").find('option:selected').attr('id');
+            var donation_val = $("#donation-val").val();
+
+            $.post( "/donate/organization", { 
+                organization: organization_email,
+                donation_val: donation_val
+            })
+            .done(function( data ) {
+                var success_message = 
+                "<div class='alert alert-success'>" +
+                    "<strong>Donasi Berhasil!</strong>" + 
+                    "Anda berhasil mendonasikan Rp" +  donation_val + ",00 " +
+                    "kepada organisasi " + organization_name + "." +
+                    "<span class='close' data-dismiss='alert'>&times;</span>" +
+                "</div>";
+                $("#alert").append(success_message);
+                
+            })
+            .fail(function(xhr, status, error) {
+                var response_text = xhr.responseText;
+                var response_text_title = response_text.split("title>");
+                var response_text_title_clean = response_text_title[1];
+
+                var response_text_clean = response_text_title_clean.split("/");
+                var error_msg = response_text_clean[0].replace("Exception: ","");
+
+                var danger_message = 
+                "<div class='alert alert-danger'>" +
+                    "<strong>Donasi Gagal!</strong> " + 
+                    error_msg +
+                    "<span class='close' data-dismiss='alert'>&times;</span>" +
+                "</div>";
+                $("#alert").append(danger_message);           
+            });
         });
 
         $(document).keydown(function(e){

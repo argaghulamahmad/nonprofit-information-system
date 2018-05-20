@@ -1,6 +1,7 @@
 import os
 
 import psycopg2
+from datetime import *
 from flask import Flask, render_template, session, request
 
 # import urllib.parse
@@ -53,6 +54,7 @@ def dashboard(recentlyRegistered=False):
 # redirect to login page
 @app.route('/login', defaults={'wrongPassword': False, 'notExist': False})
 def loginPage(wrongPassword, notExist):
+    cur.execute("""set search_path to sion""")
     return render_template('login.html', wrongPassword=wrongPassword, notExist=notExist)
 
 
@@ -61,6 +63,7 @@ def loginPage(wrongPassword, notExist):
 # mark user have logged in
 @app.route('/login', methods=['POST'])
 def login():
+    cur.execute("""set search_path to sion""")
     try:
         requestEmail = request.form["email"]
         requestPassword = request.form["password"]
@@ -568,11 +571,13 @@ def split_money(money):
 def view_donate_organization():
     try:
         if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
-            raise Exception('User Not Authorize to do This Task.')
+            raise Exception('You are not authorize to do this task.')
 
         rows = cur.execute(
-                """select nama
-                from sion.organisasi""")
+                """select O.nama, O.email_organisasi
+                from sion.organisasi_terverifikasi T,
+                sion.organisasi O where
+                O.email_organisasi = T.email_organisasi""")
         organizations = cur.fetchall()
         
         isSponsor = session['role'] == 'sponsor'
@@ -581,6 +586,7 @@ def view_donate_organization():
             'donate_organization.html',
             userName=session['name'],
             userRole=session['role'],
+            userEmail=session['email'],
             isSponsor=isSponsor,
             organizations=organizations
         )
@@ -589,13 +595,82 @@ def view_donate_organization():
 
 @app.route('/donate/organization', methods=['POST'])
 def donate_organization_form():
-    try:
-        if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
-            raise Exception('User Not Authorize to do This Task.')
-        
+
+    if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
+        raise Exception('You are not authorize to do this task.')
+
+    organization_email = request.form["organization"]
+    donation_val = request.form["donation_val"]
+
+    rows = cur.execute(
+                """select O.email_organisasi 
+                from sion.organisasi_terverifikasi O
+                where O.email_organisasi = {}""".format(
+                "'" + organization_email + "'"))
+    is_terverifikasi = cur.fetchone()
+    
+    if is_terverifikasi == None:
+        raise Exception("Organisasi ini belum terverifikasi, sehingga belum dapat menerima donasi.")
+
+    now = datetime.now().strftime("%Y-%m-%d")
+
+    if donation_val == "":
+        raise Exception("Jumlah donasi tidak boleh kosong/negatif.")
+    donation_val = int(donation_val)
+
+    if session['role'] == 'sponsor':
+
+        if (donation_val < 2000000):
+            raise Exception("Jumlah donasi untuk sponsor minimal Rp2.000.000,00.")
+
+        rows = cur.execute(
+                """select DISTINCT S.email
+                from sion.sponsor S
+                where S.email = {}""".format(
+                "'" + session['email'] + "'"))
+        sponsor = cur.fetchone()
+        sponsor_email = sponsor[0]
+
+        cur.execute(
+            """insert into sion.sponsor_organisasi 
+            (sponsor, organisasi, tanggal, nominal)
+            values ({}, {}, {}, {})""".format(
+            "'" + sponsor_email + "'",
+            "'" + organization_email + "'",
+            "'" + now + "'",
+            donation_val))
+
+    else:
+
+        rows = cur.execute(
+                """select DISTINCT D.email, D.saldo
+                from sion.donatur D
+                where D.email = {}""".format(
+                "'" + session['email'] + "'"))
+        donatur = cur.fetchone()
+
+        if donatur == None:
+            raise Exception("Anda bukan merupakan seorang donatur")
+        donatur_email = donatur[0]
+
+        if (donation_val <= 0):
+            raise Exception("Jumlah donasi tidak boleh kosong/negatif.")
+
+        donatur_saldo = donatur[1]
+        if (donation_val > donatur_saldo):
+            raise Exception("Jumlah donasi melebihi jumlah saldo.")
+
+        cur.execute(
+            """insert into sion.donatur_organisasi 
+            (donatur, organisasi, tanggal, nominal)
+            values ({}, {}, {}, {})""".format(
+            "'" + donatur_email + "'",
+            "'" + organization_email + "'",
+            "'" + now + "'",
+            donation_val))
+
+    return dashboard()
             
-    except Exception as e:
-        return dashboard()
 
 def isOrganisasiExists(email):
     cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
