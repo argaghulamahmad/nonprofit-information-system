@@ -480,7 +480,7 @@ def view_organization_list():
         )
 
     except Exception as e:
-        return dashboard()
+        return dashboard(False)
 
 # created by Aldi Hilman R
 # view organization detail
@@ -496,6 +496,13 @@ def view_organization_profle(email):
                 where email_organisasi={}""".format(
                 "'" + organization_email + "'"))
         biodata_organisasi = cur.fetchone()
+
+        rows = cur.execute(
+                """select T.tujuan
+                from sion.tujuan_organisasi T
+                where T.organisasi={}""".format(
+                "'" + organization_email + "'"))
+        tujuan_organisasi = cur.fetchall()
 
         rows = cur.execute(
                 """select U.email, U.nama, U.alamat_lengkap
@@ -559,16 +566,20 @@ def view_organization_profle(email):
             'organization_profile.html',
             userName=session['name'],
             userRole=session['role'],
+
+            tujuan_organisasi=tujuan_organisasi,
             biodata_organisasi=biodata_organisasi,
             pengurus_organisasi=pengurus_organisasi,
+
             donasi_donatur=donasi_donatur,
             donasi_sponsor=donasi_sponsor,
             total_donasi=total_donasi
         )
     except Exception as e:
-        print(str(e))
-        return dashboard()
+        return dashboard(False)
 
+# created by Aldi Hilman R
+# string to money format handler
 def split_money(money):
     ans = []
     money = str(money)
@@ -577,6 +588,9 @@ def split_money(money):
         money = money[:-3]
     return ans
 
+# created by Aldi Hilman R
+# donate to a organization
+# querry vertified organization
 @app.route('/donate/organization')
 def view_donate_organization():
     try:
@@ -601,8 +615,11 @@ def view_donate_organization():
             organizations=organizations
         )
     except Exception as e:
-        return dashboard()
+        return dashboard(False)
 
+# created by Aldi Hilman R
+# donate to a organization form handler
+# querry lots because of many case
 @app.route('/donate/organization', methods=['POST'])
 def donate_organization_form():
 
@@ -641,14 +658,39 @@ def donate_organization_form():
         sponsor = cur.fetchone()
         sponsor_email = sponsor[0]
 
-        cur.execute(
-            """insert into sion.sponsor_organisasi 
-            (sponsor, organisasi, tanggal, nominal)
-            values ({}, {}, {}, {})""".format(
-            "'" + sponsor_email + "'",
-            "'" + organization_email + "'",
-            "'" + now + "'",
-            donation_val))
+        rows = cur.execute(
+            """select * from sion.sponsor_organisasi S
+                where S.sponsor={} and
+                S.organisasi={}"""
+            .format(
+                "'" + sponsor_email + "'",
+                "'" + organization_email + "'"
+            )
+        )
+        is_pernah_donasi = cur.fetchone()
+
+        if is_pernah_donasi != None:
+            prev_donation_val = int(is_pernah_donasi[3])
+            cur.execute(
+                """update sion.sponsor_organisasi 
+                    set tanggal={},
+                    nominal={}
+                    where sponsor={} and
+                    organisasi={}"""
+                .format(
+                    "'" + now + "'",
+                    str(donation_val+prev_donation_val),
+                    "'" + sponsor_email + "'",
+                    "'" + organization_email + "'"))
+        else:
+            cur.execute(
+                """insert into sion.sponsor_organisasi 
+                (sponsor, organisasi, tanggal, nominal)
+                values ({}, {}, {}, {})""".format(
+                "'" + sponsor_email + "'",
+                "'" + organization_email + "'",
+                "'" + now + "'",
+                donation_val))
 
     else:
 
@@ -670,16 +712,45 @@ def donate_organization_form():
         if (donation_val > donatur_saldo):
             raise Exception("Jumlah donasi melebihi jumlah saldo.")
 
-        cur.execute(
-            """insert into sion.donatur_organisasi 
-            (donatur, organisasi, tanggal, nominal)
-            values ({}, {}, {}, {})""".format(
-            "'" + donatur_email + "'",
-            "'" + organization_email + "'",
-            "'" + now + "'",
-            donation_val))
+        rows = cur.execute(
+            """select * from sion.donatur_organisasi D
+                where D.donatur={} and
+                D.organisasi={}"""
+            .format(
+                "'" + donatur_email + "'",
+                "'" + organization_email + "'"
+            )
+        )
+        is_pernah_donasi = cur.fetchone()
 
-    return dashboard()
+        if is_pernah_donasi != None:
+            prev_donation_val = int(is_pernah_donasi[3])
+            cur.execute(
+                """update sion.donatur_organisasi 
+                    set tanggal={},
+                    nominal={}
+                    where donatur={} and
+                    organisasi={}"""
+                .format(
+                    "'" + now + "'",
+                    str(donation_val+prev_donation_val),
+                    "'" + donatur_email + "'",
+                    "'" + organization_email + "'"))
+
+        else:
+            cur.execute(
+                """insert into sion.donatur_organisasi 
+                (donatur, organisasi, tanggal, nominal)
+                values ({}, {}, {}, {})""".format(
+                "'" + donatur_email + "'",
+                "'" + organization_email + "'",
+                "'" + now + "'",
+                donation_val))
+
+        sisa_uang = str(donatur_saldo-donation_val)
+        return "Rp{},00".format(".".join(split_money(sisa_uang)))
+
+    return "200 Success"
             
 
 def isOrganisasiExists(email):

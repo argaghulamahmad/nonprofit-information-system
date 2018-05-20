@@ -1,5 +1,5 @@
-<!--Created by Arga G. A.-->
-<!--html template for dashboard-->
+<!--Created by Aldi Hilman R-->
+<!--html template for donating to a organization-->
 {% block body %}
 <head>
     <meta charset="utf-8">
@@ -163,13 +163,24 @@
                 donation_val: donation_val
             })
             .done(function( data ) {
-                var success_message = 
-                "<div class='alert alert-success'>" +
-                    "<strong>Donasi Berhasil!</strong>" + 
-                    "Anda berhasil mendonasikan Rp" +  donation_val + ",00 " +
-                    "kepada organisasi " + organization_name + "." +
-                    "<span class='close' data-dismiss='alert'>&times;</span>" +
-                "</div>";
+                if (data == "200 Success") {
+                    var success_message = 
+                    "<div class='alert alert-success'>" +
+                        "<strong>Donasi Berhasil! </strong>" + 
+                        "Anda berhasil mendonasikan Rp" +  donation_val + ",00 " +
+                        "kepada organisasi " + organization_name + "." +
+                        "<span class='close' data-dismiss='alert'>&times;</span>" +
+                    "</div>";
+                } else {
+                    var success_message = 
+                    "<div class='alert alert-success'>" +
+                        "<strong>Donasi Berhasil! </strong>" + 
+                        "Anda berhasil mendonasikan Rp" +  donation_val + ",00 " +
+                        "kepada organisasi " + organization_name + "." + 
+                        "Sisa saldo anda adalah " + data + " ." + 
+                        "<span class='close' data-dismiss='alert'>&times;</span>" +
+                    "</div>";
+                }
                 $("#alert").append(success_message);
                 
             })
@@ -183,7 +194,7 @@
 
                 var danger_message = 
                 "<div class='alert alert-danger'>" +
-                    "<strong>Donasi Gagal!</strong> " + 
+                    "<strong>Donasi Gagal! </strong> " + 
                     error_msg +
                     "<span class='close' data-dismiss='alert'>&times;</span>" +
                 "</div>";
@@ -193,7 +204,7 @@
 
         $(document).keydown(function(e){
             if ($('#myModal').attr('class') == 'modal fade show'
-                && e.keyCode == 13) { 
+                && e.keyCode == 13 && $("#ya-btn").css('display') != 'none') { 
                 $("#ya-btn").click();
                 return false;
             } else if ($('#myModal').attr('class') == 'modal fade show'
