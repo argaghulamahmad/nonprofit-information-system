@@ -1,8 +1,9 @@
-<!--Created by Arga G. A.-->
-<!--html template for register relawan page-->
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
+        <script>
+            window.open("/", "_self");
+        </script>
     {% else %}
         <!doctype html>
         <html lang="en">
@@ -57,8 +58,6 @@
 
         <div class="container">
             <div class="py-5 text-center">
-                <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt=""
-                     width="72" height="72">
                 <h2>Register Organisasi</h2>
                 {#<p class="lead"></p>#}
             </div>
@@ -66,10 +65,11 @@
             <div class="row">
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Form Pendaftaran Organisasi</h4>
-                    <form class="needs-validation" novalidate action="/register-relawan" method="POST">
+                    <form class="needs-validation" novalidate action="/register-organisasi" method="POST">
                         <div class="mb-3">
                             <label for="name">Nama Organisasi</label>
-                            <input name="nama-organisasi" type="text" class="form-control" id="name" placeholder="" value=""
+                            <input name="nama-organisasi" type="text" class="form-control" id="name" placeholder=""
+                                   value=""
                                    required>
                             <div class="invalid-feedback">
                                 Valid organization name is required.
@@ -144,7 +144,7 @@
 
                         <div class="mb-3">
                             <label for="name">Tujuan Organisasi</label>
-                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                            <input name="tujuan" type="text" class="form-control" id="name" placeholder="tujuan A, tujuan B,..." value=""
                                    required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan tujuan organisasi anda.
@@ -154,7 +154,8 @@
 
                         <div class="mb-3">
                             <label for="name">Nama Pengurus</label>
-                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder="" value=""
+                            <input name="nama-pengurus" type="text" class="form-control" id="name" placeholder=""
+                                   value=""
                                    required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan nama pengurus organisasi anda.
@@ -172,7 +173,8 @@
 
                         <div class="mb-3">
                             <label for="address">Alamat Pengurus</label>
-                            <input name="alamat-pengurus" type="text" class="form-control" id="jalan" placeholder="" required>
+                            <input name="alamat-pengurus" type="text" class="form-control" id="jalan" placeholder=""
+                                   required>
                             <div class="invalid-feedback">
                                 Silahkan masukkan alamat pengurus oragnisasi anda.
                             </div>
@@ -184,7 +186,8 @@
             </div>
 
             <footer class="my-5 pt-5 text-muted text-center text-small">
-                <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a> © 2018</p>
+                <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a>
+                    © 2018</p>
             </footer>
         </div>
 

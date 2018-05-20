@@ -21,3 +21,7 @@
 .lh-condensed {
     line-height: 1.25;
 }
+
+.custom-file-input {
+    opacity: unset;
+}

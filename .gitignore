@@ -94,5 +94,10 @@ appengine_config.py
 .env
 env
 
+<<<<<<< HEAD
 # 
 .vscode
+=======
+#vscode
+.vscode
+>>>>>>> 7e807df479ad6e7188e4f7194daa80e9284402bc
