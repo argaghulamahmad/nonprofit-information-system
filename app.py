@@ -43,7 +43,7 @@ def home():
 # dashboard controller by Arga G. A.
 # provide dashboard page
 @app.route('/dashboard', defaults={'recentlyRegistered': False})
-def dashboard(recentlyRegistered=False):
+def dashboard(recentlyRegistered):
     if session.get('logged_in'):
         return render_template('dashboard.html', userName=session['name'], userRole=session['role'],
                                recentlyRegistered=recentlyRegistered)
@@ -64,7 +64,6 @@ def loginPage(wrongPassword, notExist):
 # mark user have logged in
 @app.route('/login', methods=['POST'])
 def login():
-    cur.execute("""set search_path to sion""")
     try:
         requestEmail = request.form["email"]
         requestPassword = request.form["password"]
