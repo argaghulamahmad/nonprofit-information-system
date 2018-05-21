@@ -62,7 +62,9 @@
                     </div>
                     <div class="card-body">
                         <p>Melihat profil anda yang telah terdaftar dalam database SION.</p>
-                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToProfile()">Lihat profil</button>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="goToProfile()">Lihat
+                            profil
+                        </button>
                     </div>
                 </div>
                 <div class="card mb-4 box-shadow">
@@ -71,7 +73,9 @@
                     </div>
                     <div class="card-body">
                         <p>Melihat organisasi yang terdaftar dalam database SION.</p>
-                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="location.href='/organization';">Lihat organisasi</button>
+                        <button type="button" class="btn btn-lg btn-block btn-primary"
+                                onclick="location.href='/organization';">Lihat organisasi
+                        </button>
                     </div>
                 </div>
                 {% if session['relawan'] or session['donatur'] or session['sponsor'] %}
@@ -81,7 +85,8 @@
                         </div>
                         <div class="card-body">
                             <p>Donasi ke organisasi yang terdaftar dalam database SION.</p>
-                            <button type="button" class="btn btn-lg btn-block btn-primary" onclick="location.href='/donate/organization';">Donasi ke organisasi
+                            <button type="button" class="btn btn-lg btn-block btn-primary"
+                                    onclick="location.href='/donate/organization';">Donasi ke organisasi
                             </button>
                         </div>
                     </div>
@@ -122,7 +127,8 @@
                 {% endif %}
             </div>
             <footer class="my-5 pt-5 text-muted text-center text-small">
-                <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a> © 2018</p>
+                <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a>
+                    © 2018</p>
             </footer>
         </div>
         <!-- Bootstrap core JavaScript
@@ -155,9 +161,9 @@
                 text: 'Thumbnail'
             });
 
-        function goToProfile() {
-          location.href = "/profile"
-        }
+            function goToProfile() {
+                location.href = "/profile"
+            }
         </script>
         </body>
     {% else %}

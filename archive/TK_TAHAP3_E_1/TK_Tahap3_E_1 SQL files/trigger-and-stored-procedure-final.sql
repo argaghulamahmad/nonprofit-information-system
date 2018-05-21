@@ -29,8 +29,8 @@ BEGIN
       saldo + OLD.nominal
       WHERE email = OLD.donatur;
       RETURN OLD;
-  END IF ;
-  END;
+  END IF;
+END;
 $$
 LANGUAGE plpgsql;
 
@@ -57,15 +57,15 @@ BEGIN
     'tidak aktif'
     WHERE email_organisasi = NEW.organisasi;
   ELSE IF (NEW.is_disetujui = true)
-      THEN
-      UPDATE ORGANISASI_TEVERIFIKASI
-        SET status_aktif =
-          'aktif'
-        WHERE email_organisasi = NEW.organisasi;
+  THEN
+    UPDATE ORGANISASI_TEVERIFIKASI
+    SET status_aktif =
+    'aktif'
+    WHERE email_organisasi = NEW.organisasi;
   end if;
-    END IF;
-    RETURN NEW;
-  END;
+  END IF;
+  RETURN NEW;
+END;
 $$
 LANGUAGE plpgsql;
 

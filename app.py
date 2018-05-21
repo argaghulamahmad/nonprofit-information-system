@@ -1,8 +1,9 @@
 import os
 import string
-from random import *
-import psycopg2
 from datetime import *
+from random import *
+
+import psycopg2
 from flask import Flask, render_template, session, request
 
 # import urllib.parse
@@ -452,6 +453,7 @@ def isPenggunaExists(email):
     else:
         return False
 
+
 # created by Aldi Hilman R
 # view organization list
 # querry all organization
@@ -462,14 +464,13 @@ def view_organization_list():
         rows = cur.fetchall()
         organizations = []
         for row in rows:
-            
             organization = {
-                'email' : row[0],
-                'website' : row[1],
-                'nama' : row[2],
-                'status_verifikasi' : row[3],
+                'email': row[0],
+                'website': row[1],
+                'nama': row[2],
+                'status_verifikasi': row[3],
             }
-            
+
             organizations.append(organization)
 
         return render_template(
@@ -482,6 +483,7 @@ def view_organization_list():
     except Exception as e:
         return dashboard(False)
 
+
 # created by Aldi Hilman R
 # view organization detail
 # querry organization specification
@@ -489,48 +491,48 @@ def view_organization_list():
 def view_organization_profle(email):
     try:
         organization_email = email
-        
+
         rows = cur.execute(
-                """select * 
-                from sion.organisasi 
-                where email_organisasi={}""".format(
+            """select * 
+            from sion.organisasi 
+            where email_organisasi={}""".format(
                 "'" + organization_email + "'"))
         biodata_organisasi = cur.fetchone()
 
         rows = cur.execute(
-                """select T.tujuan
-                from sion.tujuan_organisasi T
-                where T.organisasi={}""".format(
+            """select T.tujuan
+            from sion.tujuan_organisasi T
+            where T.organisasi={}""".format(
                 "'" + organization_email + "'"))
         tujuan_organisasi = cur.fetchall()
 
         rows = cur.execute(
-                """select U.email, U.nama, U.alamat_lengkap
-                from sion.pengguna U, sion.pengurus_organisasi P, sion.organisasi O
-                where O.email_organisasi={}
-                and P.organisasi=O.email_organisasi
-                and U.email=P.email""".format(
+            """select U.email, U.nama, U.alamat_lengkap
+            from sion.pengguna U, sion.pengurus_organisasi P, sion.organisasi O
+            where O.email_organisasi={}
+            and P.organisasi=O.email_organisasi
+            and U.email=P.email""".format(
                 "'" + organization_email + "'"))
         pengurus_organisasi = cur.fetchall()
 
         rows = cur.execute(
-                """select *
-                from sion.donatur_organisasi
-                where organisasi={}""".format(
+            """select *
+            from sion.donatur_organisasi
+            where organisasi={}""".format(
                 "'" + organization_email + "'"))
         donasi_donatur = cur.fetchall()
 
         rows = cur.execute(
-                """select *
-                from sion.sponsor_organisasi
-                where organisasi={}""".format(
+            """select *
+            from sion.sponsor_organisasi
+            where organisasi={}""".format(
                 "'" + organization_email + "'"))
         donasi_sponsor = cur.fetchall()
 
         rows = cur.execute(
-                """select sum(D.nominal)
-                from sion.donatur_organisasi D
-                where D.organisasi={}""".format(
+            """select sum(D.nominal)
+            from sion.donatur_organisasi D
+            where D.organisasi={}""".format(
                 "'" + organization_email + "'",
                 "'" + organization_email + "'"))
 
@@ -539,9 +541,9 @@ def view_organization_profle(email):
             jumlah_donasi_donatur = 0
 
         rows = cur.execute(
-                """select sum(S.nominal)
-                from sion.sponsor_organisasi S
-                where S.organisasi={}""".format(
+            """select sum(S.nominal)
+            from sion.sponsor_organisasi S
+            where S.organisasi={}""".format(
                 "'" + organization_email + "'",
                 "'" + organization_email + "'"))
 
@@ -578,6 +580,7 @@ def view_organization_profle(email):
     except Exception as e:
         return dashboard(False)
 
+
 # created by Aldi Hilman R
 # string to money format handler
 def split_money(money):
@@ -587,6 +590,7 @@ def split_money(money):
         ans = [money[-3:]] + ans
         money = money[:-3]
     return ans
+
 
 # created by Aldi Hilman R
 # donate to a organization
@@ -598,12 +602,12 @@ def view_donate_organization():
             raise Exception('You are not authorize to do this task.')
 
         rows = cur.execute(
-                """select O.nama, O.email_organisasi
-                from sion.organisasi_terverifikasi T,
-                sion.organisasi O where
-                O.email_organisasi = T.email_organisasi""")
+            """select O.nama, O.email_organisasi
+            from sion.organisasi_terverifikasi T,
+            sion.organisasi O where
+            O.email_organisasi = T.email_organisasi""")
         organizations = cur.fetchall()
-        
+
         isSponsor = session['role'] == 'sponsor'
 
         return render_template(
@@ -617,12 +621,12 @@ def view_donate_organization():
     except Exception as e:
         return dashboard(False)
 
+
 # created by Aldi Hilman R
 # donate to a organization form handler
 # querry lots because of many case
 @app.route('/donate/organization', methods=['POST'])
 def donate_organization_form():
-
     if session['role'] != 'donatur' and session['role'] != 'sponsor' and session['role'] != 'relawan':
         raise Exception('You are not authorize to do this task.')
 
@@ -630,12 +634,12 @@ def donate_organization_form():
     donation_val = request.form["donation_val"]
 
     rows = cur.execute(
-                """select O.email_organisasi 
-                from sion.organisasi_terverifikasi O
-                where O.email_organisasi = {}""".format(
-                "'" + organization_email + "'"))
+        """select O.email_organisasi 
+        from sion.organisasi_terverifikasi O
+        where O.email_organisasi = {}""".format(
+            "'" + organization_email + "'"))
     is_terverifikasi = cur.fetchone()
-    
+
     if is_terverifikasi == None:
         raise Exception("Organisasi ini belum terverifikasi, sehingga belum dapat menerima donasi.")
 
@@ -651,9 +655,9 @@ def donate_organization_form():
             raise Exception("Jumlah donasi untuk sponsor minimal Rp2.000.000,00.")
 
         rows = cur.execute(
-                """select DISTINCT S.email
-                from sion.sponsor S
-                where S.email = {}""".format(
+            """select DISTINCT S.email
+            from sion.sponsor S
+            where S.email = {}""".format(
                 "'" + session['email'] + "'"))
         sponsor = cur.fetchone()
         sponsor_email = sponsor[0]
@@ -662,7 +666,7 @@ def donate_organization_form():
             """select * from sion.sponsor_organisasi S
                 where S.sponsor={} and
                 S.organisasi={}"""
-            .format(
+                .format(
                 "'" + sponsor_email + "'",
                 "'" + organization_email + "'"
             )
@@ -677,9 +681,9 @@ def donate_organization_form():
                     nominal={}
                     where sponsor={} and
                     organisasi={}"""
-                .format(
+                    .format(
                     "'" + now + "'",
-                    str(donation_val+prev_donation_val),
+                    str(donation_val + prev_donation_val),
                     "'" + sponsor_email + "'",
                     "'" + organization_email + "'"))
         else:
@@ -687,17 +691,17 @@ def donate_organization_form():
                 """insert into sion.sponsor_organisasi 
                 (sponsor, organisasi, tanggal, nominal)
                 values ({}, {}, {}, {})""".format(
-                "'" + sponsor_email + "'",
-                "'" + organization_email + "'",
-                "'" + now + "'",
-                donation_val))
+                    "'" + sponsor_email + "'",
+                    "'" + organization_email + "'",
+                    "'" + now + "'",
+                    donation_val))
 
     else:
 
         rows = cur.execute(
-                """select DISTINCT D.email, D.saldo
-                from sion.donatur D
-                where D.email = {}""".format(
+            """select DISTINCT D.email, D.saldo
+            from sion.donatur D
+            where D.email = {}""".format(
                 "'" + session['email'] + "'"))
         donatur = cur.fetchone()
 
@@ -716,7 +720,7 @@ def donate_organization_form():
             """select * from sion.donatur_organisasi D
                 where D.donatur={} and
                 D.organisasi={}"""
-            .format(
+                .format(
                 "'" + donatur_email + "'",
                 "'" + organization_email + "'"
             )
@@ -731,9 +735,9 @@ def donate_organization_form():
                     nominal={}
                     where donatur={} and
                     organisasi={}"""
-                .format(
+                    .format(
                     "'" + now + "'",
-                    str(donation_val+prev_donation_val),
+                    str(donation_val + prev_donation_val),
                     "'" + donatur_email + "'",
                     "'" + organization_email + "'"))
 
@@ -742,16 +746,16 @@ def donate_organization_form():
                 """insert into sion.donatur_organisasi 
                 (donatur, organisasi, tanggal, nominal)
                 values ({}, {}, {}, {})""".format(
-                "'" + donatur_email + "'",
-                "'" + organization_email + "'",
-                "'" + now + "'",
-                donation_val))
+                    "'" + donatur_email + "'",
+                    "'" + organization_email + "'",
+                    "'" + now + "'",
+                    donation_val))
 
-        sisa_uang = str(donatur_saldo-donation_val)
+        sisa_uang = str(donatur_saldo - donation_val)
         return "Rp{},00".format(".".join(split_money(sisa_uang)))
 
     return "200 Success"
-            
+
 
 def isOrganisasiExists(email):
     cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
