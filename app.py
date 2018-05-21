@@ -748,8 +748,9 @@ def donate_organization_form():
     return "200 Success"
 
 
-def isOrganisasiExists(email):
-    cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {}""".format("'" + email + "'"))
+def isOrganisasiExists(email, nama):
+    cur.execute("""SELECT * FROM SION.ORGANISASI WHERE email_organisasi = {} OR nama = {}""".format("'" + email + "'",
+                                                                                                    "'" + nama + "'"))
     organization = cur.fetchone()
     if organization:
         return True
@@ -772,7 +773,7 @@ def registerOrganisasi():
     email_pengurus = request.form["email-pengurus"]
     website = request.form["website"]
 
-    if (not isPenggunaExists(email_pengurus)) and (not isOrganisasiExists(email_organisasi)):
+    if (not isPenggunaExists(email_pengurus)) and (not isOrganisasiExists(email_organisasi, nama_organisasi)):
         kecamatan = request.form["kecamatan"]
         kabupaten = request.form["kabupaten"]
         provinsi = request.form["provinsi"]
@@ -795,7 +796,7 @@ def registerOrganisasi():
                 "'" + kodepos + "'",
             ))
 
-        allchar = string.ascii_letters + string.punctuation + string.digits
+        allchar = string.ascii_letters + string.digits
         pass_pengurus = "".join(choice(allchar) for x in range(10))
         cur.execute(
             """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
