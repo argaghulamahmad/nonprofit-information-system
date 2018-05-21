@@ -55,6 +55,10 @@
                         <th scope="col">Kelurahan</th>
                         <th scope="col">Kode Pos</th>
                         <th scope="col">Status Verifikasi</th>
+                        
+                        {% if nomor_registrasi %}
+                            <th scope="col">Nomor Registrasi</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -69,6 +73,9 @@
                     <td>{{ biodata_organisasi[6] }}</td>
                     <td>{{ biodata_organisasi[7] }}</td>
                     <td>{{ biodata_organisasi[8] }}</td>
+                    {% if nomor_registrasi %}
+                        <td>{{ nomor_registrasi }}</td>
+                    {% endif %}
                     </tr>
 
                     </tbody>
