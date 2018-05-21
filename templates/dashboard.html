@@ -71,7 +71,7 @@
                     </div>
                     <div class="card-body">
                         <p>Melihat organisasi yang terdaftar dalam database SION.</p>
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Lihat organisasi</button>
+                        <button type="button" class="btn btn-lg btn-block btn-primary" onclick="location.href='/organization';">Lihat organisasi</button>
                     </div>
                 </div>
                 {% if session['relawan'] or session['donatur'] or session['sponsor'] %}
@@ -81,7 +81,7 @@
                         </div>
                         <div class="card-body">
                             <p>Donasi ke organisasi yang terdaftar dalam database SION.</p>
-                            <button type="button" class="btn btn-lg btn-block btn-primary">Donasi ke organisasi
+                            <button type="button" class="btn btn-lg btn-block btn-primary" onclick="location.href='/donate/organization';">Donasi ke organisasi
                             </button>
                         </div>
                     </div>

@@ -1,0 +1,93 @@
+<!--Created by Aldi Hilman R-->
+<!--html template for viewing organization list-->
+{% block body %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="icon" href="../../../../favicon.ico">-->
+
+    <title>Daftar Organisasi - SION</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/dashboard.css" rel="stylesheet">
+    <link href="/static/organization.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal">SION</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="/">Dashboard</a>
+    </nav>
+    <a class="btn btn-outline-warning" href="/logout">Log out</a>
+</div>
+
+<div class="container">
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Selamat datang, {{userName}} di Profil Organisasi SION.</h1>
+        <p class="lead">Anda adalah <u>{{userRole}}</u>.</p>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table table-striped table-hover">
+    <thead>
+        <tr>
+        <th scope="col">Email</th>
+        <th scope="col">Website</th>
+        <th scope="col">Name</th>
+        <th scope="col">Status Verifikasi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for organization in organizations %}
+            <tr>
+                <th class="hover-blue" scope="row" onclick="location.href='/organization/{{organization['email']}}';" >
+                    {{organization['email']}}
+                </th>
+                <td>{{organization['website']}}</td>
+                <td>{{organization['nama']}}</td>
+                <td>{{organization['status_verifikasi']}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1"><a href="/">SION</a> by <a href="https://gitlab.com/KelompokE1Basdat2018/SION-FLASK">E1BASDAT18</a> © 2018</p>
+    </footer>
+<div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script\n' +
+    '  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"\n' +
+    '  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="\n' +
+    '  crossorigin="anonymous"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.js"></script>
+<script>
+    Holder.addTheme('thumb', {
+        bg: '#55595c',
+        fg: '#eceeef',
+        text: 'Thumbnail'
+    });
+</script>
+</body>
+{% endblock %}
