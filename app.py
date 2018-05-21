@@ -47,6 +47,7 @@ def dashboard(recentlyRegistered):
 @app.route('/login', defaults={'wrongPassword': False, 'notExist': False})
 def loginPage(wrongPassword, notExist):
     cur.execute("""set search_path to sion""")
+    cur.execute("""SET datestyle = "ISO, DMY""")
     return render_template('login.html', wrongPassword=wrongPassword, notExist=notExist)
 
 
