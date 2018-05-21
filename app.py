@@ -25,6 +25,8 @@ app = Flask(__name__)
 # is user have logged in? redirect to correct feature
 @app.route('/')
 def home():
+    cur.execute("""set search_path to sion""")
+    cur.execute("""SET datestyle = \"ISO, DMY\"""")
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -46,8 +48,6 @@ def dashboard(recentlyRegistered):
 # redirect to login page
 @app.route('/login', defaults={'wrongPassword': False, 'notExist': False})
 def loginPage(wrongPassword, notExist):
-    cur.execute("""set search_path to sion""")
-    cur.execute("""SET datestyle = \"ISO, DMY\"""")
     return render_template('login.html', wrongPassword=wrongPassword, notExist=notExist)
 
 
