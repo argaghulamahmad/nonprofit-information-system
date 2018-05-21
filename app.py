@@ -320,7 +320,7 @@ def registerRelawan():
 
         # print(nama + " " + email + " " + password)
         # print(kecamatan + " " + kabupaten + " " + provinsi + " " + kodepos + " " + jalan)
-        # print(birthdate + " " + nomorHandphone + " " + skill)
+        # print(birthdate + " " + nomorHandphone + " " + skills)
 
         cur.execute(
             """INSERT INTO SION.PENGGUNA (email, password, nama, alamat_lengkap) VALUES ({}, {}, {}, {})""".format(
@@ -376,7 +376,7 @@ def registerDonatur():
                 "'" + password + "'",
                 "'" + nama + "'",
                 "'" + alamat_lengkap + "'"))
-        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 0)""".format("'" + email + "'"))
+        cur.execute("""INSERT INTO SION.DONATUR (email, saldo) VALUES ({}, 1000000)""".format("'" + email + "'"))
 
         session['email'] = email
         session['name'] = nama
