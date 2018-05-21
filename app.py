@@ -520,6 +520,14 @@ def view_organization_profle(email):
                 "'" + organization_email + "'"))
         donasi_sponsor = cur.fetchall()
 
+
+        rows = cur.execute(
+            """select O.nomor_registrasi
+            from sion.organisasi_terverifikasi O
+            where O.email_organisasi={}""".format(
+                "'" + organization_email + "'"))
+        nomor_registrasi = cur.fetchone()[0]
+
         rows = cur.execute(
             """select sum(D.nominal)
             from sion.donatur_organisasi D
@@ -563,6 +571,7 @@ def view_organization_profle(email):
             tujuan_organisasi=tujuan_organisasi,
             biodata_organisasi=biodata_organisasi,
             pengurus_organisasi=pengurus_organisasi,
+            nomor_registrasi=nomor_registrasi,
 
             donasi_donatur=donasi_donatur,
             donasi_sponsor=donasi_sponsor,
