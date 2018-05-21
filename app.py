@@ -6,16 +6,6 @@ from random import *
 import psycopg2
 from flask import Flask, render_template, session, request
 
-# import urllib.parse
-# from os.path import exists
-# from os import makedirs
-
-# connect for deployed application at heroku
-# url = urlparse.urlparse(os.environ.get('DATABASE_URL'))
-# db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
-# schema = "schema.sql"
-# conn = psycopg2.connect(db)
-
 # connect to local database
 # change this variables according your local database
 dbname = 'db081'  # database name
