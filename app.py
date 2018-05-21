@@ -21,7 +21,7 @@ dbname = 'db081'  # database name
 username = 'db081'  # username
 password = 'saiT8Noo'  # password
 
-conn_string = "host='localhost' dbname=%s user=%s password=%s " % (dbname, username, password)
+conn_string = "host='dbpg.cs.ui.ac.id' dbname=%s user=%s password=%s " % (dbname, username, password)
 conn = psycopg2.connect(conn_string)
 conn.autocommit = True
 
@@ -863,4 +863,4 @@ if __name__ == '__main__':
         DEBUG=True,
         TEMPLATES_AUTO_RELOAD=True,
     )
-    app.run()
+    app.run(host='152.118.25.3', port=8101)
